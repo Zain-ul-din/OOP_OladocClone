@@ -20,6 +20,7 @@ three users.
 #include "./Login/EmailValidator.h"
 #include "./Login/CnicValidator.h"
 #include "./Users/User.h"
+#include "./Users/Doctor.h"
 
 // Driver Code
 int main () {
