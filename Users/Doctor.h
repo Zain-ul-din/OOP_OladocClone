@@ -47,7 +47,6 @@ public:
    bool operator==(const Doctor &rhs) const;
    bool operator!=(const Doctor &rhs) const;
 
-
 private:
     std::string email;
     int experienceYears;

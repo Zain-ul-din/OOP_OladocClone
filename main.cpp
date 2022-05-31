@@ -22,6 +22,8 @@ three users.
 #include "./Users/User.h"
 #include "./Users/Doctor.h"
 
+#include "./OlaDoc.h"
+
 // Driver Code
 int main () {
 
@@ -39,6 +41,9 @@ int main () {
     if (ValidateCnic(cnic)) {
         std::cout << "true";
     } else std::cout << "False";
+
+    OlaDoc olaDoc;
+
     return 0;
 }
 

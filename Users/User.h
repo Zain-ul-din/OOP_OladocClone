@@ -31,7 +31,6 @@ public:
 
     /* Virtual Functions */
 
-    virtual void SignUp () = 0;
 protected:
     std::string name;
     std::string cnicNumber;

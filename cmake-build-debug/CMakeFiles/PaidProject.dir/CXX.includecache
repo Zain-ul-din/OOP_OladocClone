@@ -6,6 +6,12 @@
 
 #IncludeRegexTransform: 
 
+D:/C++/PaidProject/FileManager/SaveSystem.h
+iostream
+-
+fstream
+-
+
 D:/C++/PaidProject/Login/CnicValidator.h
 ./Validator.h
 D:/C++/PaidProject/Login/Validator.h
@@ -24,6 +30,20 @@ iostream
 string
 -
 
+D:/C++/PaidProject/OlaDoc.h
+string
+-
+./Users/Doctor.h
+D:/C++/PaidProject/Users/Doctor.h
+./FileManager/SaveSystem.h
+D:/C++/PaidProject/FileManager/SaveSystem.h
+
+D:/C++/PaidProject/Users/Doctor.h
+./User.h
+D:/C++/PaidProject/Users/User.h
+
+D:/C++/PaidProject/Users/User.h
+
 D:/C++/PaidProject/main.cpp
 Login/PasswordValidator.h
 D:/C++/PaidProject/Login/PasswordValidator.h
@@ -31,4 +51,10 @@ D:/C++/PaidProject/Login/PasswordValidator.h
 D:/C++/PaidProject/Login/EmailValidator.h
 ./Login/CnicValidator.h
 D:/C++/PaidProject/Login/CnicValidator.h
+./Users/User.h
+D:/C++/PaidProject/Users/User.h
+./Users/Doctor.h
+D:/C++/PaidProject/Users/Doctor.h
+./OlaDoc.h
+D:/C++/PaidProject/OlaDoc.h
 
