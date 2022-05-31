@@ -4,10 +4,8 @@
 #ifndef USER_H
 #define USER_H
 
-namespace _User { class User;}
-
 // @ User Base Class
-class _User::User {
+class User {
 public:
     /* Constructor */
 

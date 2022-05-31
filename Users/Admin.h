@@ -7,7 +7,7 @@
 
 #include "./User.h"
 
-class Admin : public _User::User {
+class Admin : public User {
 public:
 
 private:
