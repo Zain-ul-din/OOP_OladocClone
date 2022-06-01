@@ -19,4 +19,6 @@ string GetString (const char* message) {
     return str;
 }
 
+string PrintError (const char* message) { cout << "\n Error : " << message << " \n"; }
+
 #endif //INPUT_H

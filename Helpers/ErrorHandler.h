@@ -10,17 +10,6 @@
 
 using namespace std;
 
-void TrowError (string errType) {
-    cout << "\n" << " !! Error _ ";
-    switch (errType) {
-        case "duplicate_acc":
-            cout << "Account Already Exists Please Use Sign In Instead";
-        break;
 
-        default:
-            cout << "NULL";
-    }
-    cout << " .\n";
-}
 
 #endif //ERRORHANDLER_H
