@@ -140,8 +140,7 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
             cout << " - " << Doctor::SpecializationList[i] << " - " << i <<"\n";
         int choice = GetInput<int>("\n >> Enter you're selection _  ");
         specializationArea = Doctor::GetSpecializationByIdx(choice);
-        if (specializationArea == "NULL")
-            PrintError("Invalid Choice");
+        if (specializationArea == "NULL") PrintError("Invalid Choice");
         else cout << "\n You Select _ " << specializationArea << "\n";
     } while (specializationArea == "NULL");
 
@@ -170,11 +169,8 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
 }
 
 bool Doctors::IsConatins(Doctor &doctor) {
-    int idx = 0;
-    while (this->doctors[idx] != NULL) {
+    for (int idx = 0 ; idx < MAX && this->doctors[idx] != NULL ; idx += 1 )
         if (*(this->doctors[idx]) == doctor) return true;
-        idx += 1;
-    }
     return false;
 }
 
