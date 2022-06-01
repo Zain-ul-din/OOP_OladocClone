@@ -1,0 +1,8 @@
+//
+// Created by 97152 on 01/06/2022.
+//
+
+#ifndef PAIDPROJECT_INPUT_H
+#define PAIDPROJECT_INPUT_H
+
+#endif //PAIDPROJECT_INPUT_H
