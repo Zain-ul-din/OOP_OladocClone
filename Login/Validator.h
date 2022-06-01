@@ -12,6 +12,10 @@ bool ValidatePassword(string &, const int);
 bool ValidateEmail(string &, string);
 bool ValidateCnic(string &);
 
+string GetPassword(const char *, bool);
+string GetEmail(const char *);
+string GetCnic(const char *);
+
 
 /* Validates Password
    @ Params : std::string & pass , const int len
@@ -111,6 +115,59 @@ bool ValidateCnic(string &cnic) {
 
     isValid = NUMBERS[0] != cnic[0];
     return isValid;
+}
+
+/* Returns Valid Password
+@ Params : const char* message
+@ Returns : string */
+string GetPassword(const char *message, bool reCheck = true) {
+    string password, reTypePassword;
+    bool isValid = false;
+    bool isMatch = false;
+
+    do {
+        do {
+            password = GetString(message);
+            isValid = ValidatePassword(password, 8);
+            if (!isValid) PrintError("Invalid Password");
+        } while (!isValid);
+
+        if (!reCheck) return password;
+
+        reTypePassword = GetString(" >> Retype password : ");
+        isMatch = password == reTypePassword;
+        if (!isMatch) PrintError("2nd password is not matching with 1st one please retype again");
+    } while (!isMatch);
+
+    return password;
+}
+
+/* Returns Valid Email
+   @ Params : const char* message
+   @ Returns : string */
+string GetEmail(const char *message) {
+    string email;
+    bool isValid = false;
+    do {
+        email = GetString(message);
+        isValid = ValidateEmail(email, "@gmail.com");
+        if (!isValid) PrintError("Invalid email address please enter correct one ");
+    } while (!isValid);
+    return email;
+}
+
+/* Returns Valid Password
+   @ Params : const char* message
+   @ Returns : string */
+string GetCnic(const char *message) {
+    string cnic;
+    bool isValid = false;
+    do {
+        cnic = GetString(message);
+        isValid = ValidateCnic(cnic);
+        if (!isValid) PrintError("Invalid Cnic Number ! cnic should be 13 digits ");
+    } while (!isValid);
+    return cnic;
 }
 
 

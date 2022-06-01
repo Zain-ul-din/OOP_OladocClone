@@ -106,23 +106,8 @@ void Doctors::Init() {
 
 bool Doctors::SignUp_Helper(Doctor **doctor) {
 
-    string email = ""  , cnicNumber = "";
-    bool emailValidator = false;
-    bool cnicValidator = false;
-
-    do {
-        email = GetString(" >> Enter Email Address : ");
-        emailValidator = ValidateEmail(email , "@gmail.com");
-        if (!emailValidator) PrintError("Invalid email address please enter correct one ");
-    } while (!emailValidator);
-
-    do {
-        cnicNumber = GetString(" >> Enter Cnic Number : ");
-        cnicValidator = ValidateCnic(cnicNumber);
-        if (!cnicValidator)
-            PrintError("Invalid Cnic Number ! cnic should be 13 digits ");
-    } while (!cnicValidator);
-
+    string email = GetEmail(" >> Enter Email Address : ")
+    , cnicNumber= GetCnic(" >> Enter Cnic Number : ");
     (*doctor)->setEmail(email);
     (*doctor)->setCnicNumber(cnicNumber);
 
@@ -133,51 +118,40 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
     }
 
     // sign Up Logic
-    string password = "" , passwordCheck = "" , name = "";
-    bool isNameAleadyTaken = false;
-
-    do {
-        name = GetString(" >> Enter user name _ ");
-        isNameAleadyTaken = FindsDoctorUserName(name);
-        if (isNameAleadyTaken)
-            cout << " Name Already Taken please use new name ";
-    } while (isNameAleadyTaken);
-
-    // Verify's Password
-    do {
-        bool passwordValidator = false;
-        do {
-            password = GetString(" >> Enter password ( Password must be 8 characters long and the use of a minimum of one special character , uppercase , lowercase , and the numeric digit is a must ) : ");
-            passwordValidator = ValidatePassword(password , 8);
-            if(!passwordValidator)
-                PrintError("Invalid Password");
-        } while (!passwordValidator);
-        passwordCheck = GetString(" >> Retype password : ");
-        if (passwordCheck != password) PrintError("2nd password is not matching with 1st one please retype again");
-    } while (passwordCheck != password);
-
+    string password = GetPassword
+    (" >> Enter password ( Password must be 8 characters long and the use of a minimum of one special character , uppercase , lowercase , and the numeric digit is a must ) : ") ,   name;
     (*doctor)->setPassword(password);
 
-    // gets doctor associated data
+    bool isNameAlreadyTaken = false;
+    do {
+        name = GetString(" >> Enter user name _ ");
+        isNameAlreadyTaken = FindsDoctorUserName(name);
+        if (isNameAlreadyTaken)
+            cout << " Name Already Taken please use new name ";
+    } while (isNameAlreadyTaken);
 
+    // gets doctor associated data
     cout << "\n -- You're almost done with registration please provide some information about you :-) \n";
 
-    string  specializationArea = "";
+    string  specializationArea;
     do {
         cout << "\n -- Select You're specialization area\n";
         for (int  i = 0 ; i < 4; i  += 1)
             cout << " - " << Doctor::SpecializationList[i] << " - " << i <<"\n";
-        int choice = GetInt("\n >> Enter you're selection _  ");
+        int choice = GetInput<int>("\n >> Enter you're selection _  ");
         specializationArea = Doctor::GetSpecializationByIdx(choice);
         if (specializationArea == "NULL")
             PrintError("Invalid Choice");
         else cout << "\n You Select _ " << specializationArea << "\n";
     } while (specializationArea == "NULL");
 
-    int experienceYears = GetInt(" >> How many years of experience you have _ ");
-    string hospitalName  = GetString(" >> Enter you're hospital name _ ") , city = GetString(" >> Enter city name _ ");
-    int startingHour = GetInt(" >> Enter appointments starting Time WRT => 24 Hour format _  "), endingHours = GetInt(" >> Enter appointments ending Time WRT => 24 Hour format _  ") ;
-    double rates  = GetDouble(" >> Enter in person appointment rate _ ") , onLineRates = GetDouble(" >> Enter online appointment rate _ ");
+    int experienceYears = GetInput<int>(" >> How many years of experience you have _ ");
+    string hospitalName  = GetString(" >> Enter you're hospital name _ ")
+    , city = GetString(" >> Enter city name _ ");
+    int startingHour = GetInput<int>(" >> Enter appointments starting Time WRT => 24 Hour format _  ")
+    , endingHours = GetInput<int>(" >> Enter appointments ending Time WRT => 24 Hour format _  ") ;
+    double rates  = GetInput<double>(" >> Enter in person appointment rate _ ")
+    , onLineRates = GetInput<double>(" >> Enter online appointment rate _ ");
 
     (*doctor)->setSpecializationArea(specializationArea);
     (*doctor)->setExperienceYears(experienceYears);
@@ -227,8 +201,8 @@ int Doctors::GetIdxOf(Doctor &doctor) {
 bool Doctors::FindsDoctorUserName(string &name) {
     int idx = 0;
     while (this->doctors[idx] != NULL) {
-        if (name == this->doctors[idx]->getName())
-            return true;
+        if (name == this->doctors[idx]->getName()) return true;
+        idx += 1;
     }
     return false;
 }
