@@ -14,8 +14,8 @@ using namespace std;
 template<class Type>
 class ISaveAble  {
 public:
-    virtual std::string ToString () = 0;
-    virtual std::string ToObj (std::string& objStr) = 0;
+    virtual string ToString () = 0;
+    virtual Type ToObj (std::string& objStr) = 0;
 };
 
 bool IsEmptyFile(std::ifstream& pFile) { return pFile.peek() == ifstream::traits_type::eof(); }

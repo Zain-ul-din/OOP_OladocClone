@@ -6,6 +6,7 @@ CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Login\CnicValidator.h
 CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Login\EmailValidator.h
 CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Login\PasswordValidator.h
 CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Login\Validator.h
+CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Manager\OldaDoc_Manager.h
 CMakeFiles\PaidProject.dir\main.cpp.obj: ..\OlaDoc.h
 CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Users\Doctor.h
 CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Users\User.h

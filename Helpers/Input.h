@@ -1,8 +1,22 @@
 //
-// Created by 97152 on 01/06/2022.
+// Dependencies : NONE
 //
 
-#ifndef PAIDPROJECT_INPUT_H
-#define PAIDPROJECT_INPUT_H
+#ifndef INPUT_H
+#define INPUT_H
 
-#endif //PAIDPROJECT_INPUT_H
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string GetString (const char* message) {
+    cout << message;
+    string str;
+    cin.clear(); // ! clear previous buffer
+    cin.sync(); // reset flags
+    getline(cin , str);
+    return str;
+}
+
+#endif //INPUT_H

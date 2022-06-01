@@ -1,8 +1,12 @@
 //
-// Created by 97152 on 01/06/2022.
+// Dependencies :
 //
 
-#ifndef PAIDPROJECT_OLDADOC_MANAGER_H
-#define PAIDPROJECT_OLDADOC_MANAGER_H
+#ifndef OLDA_DOC_MANAGER_H
+#define OLDA_DOC_MANAGER_H
 
-#endif //PAIDPROJECT_OLDADOC_MANAGER_H
+#include "./Doctors.h"
+
+
+
+#endif //OLDA_DOC_MANAGER_H

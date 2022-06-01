@@ -30,15 +30,19 @@ iostream
 string
 -
 
-D:/C++/PaidProject/OlaDoc.h
-string
--
-./Users/Doctor.h
+D:/C++/PaidProject/Manager/OldaDoc_Manager.h
+../Users/Doctor.h
 D:/C++/PaidProject/Users/Doctor.h
-./FileManager/SaveSystem.h
+../FileManager/SaveSystem.h
 D:/C++/PaidProject/FileManager/SaveSystem.h
 
+D:/C++/PaidProject/OlaDoc.h
+./Manager/OldaDoc_Manager.h
+D:/C++/PaidProject/Manager/OldaDoc_Manager.h
+
 D:/C++/PaidProject/Users/Doctor.h
+ostream
+-
 ./User.h
 D:/C++/PaidProject/Users/User.h
 
