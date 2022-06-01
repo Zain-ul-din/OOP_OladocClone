@@ -7,6 +7,11 @@
 
 #include "./Doctors.h"
 
+class OldaDoc_Manager {
+public:
 
+private:
+
+};
 
 #endif //OLDA_DOC_MANAGER_H

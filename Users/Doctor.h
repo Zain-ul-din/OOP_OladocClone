@@ -5,10 +5,9 @@
 #ifndef DOCTOR_H
 #define DOCTOR_H
 
-#include <ostream>
+
 #include "./User.h"
 
-using namespace std;
 
 enum class Specialization{
     Gynecologist  ,
@@ -30,15 +29,15 @@ public:
 
     /* Getter Setter */
 
-    const string getEmail() const;
+    string getEmail() const;
     void setEmail(const string &email);
     int getExperienceYears() const;
     void setExperienceYears(int experienceYears);
-    const string getHospitalName() const;
+    string getHospitalName() const;
     void setHospitalName(const string &hospitalName);
-    const string getCity() const;
+    string getCity() const;
     void setCity(const string &city);
-    const string getSpecializationArea() const;
+    string getSpecializationArea() const;
     void setSpecializationArea(const string &specializationArea);
     int getStartingHour() const;
     void setStartingHour(int startingHour);
@@ -57,7 +56,8 @@ public:
    /* IO */
    friend ostream &operator << (ostream &os, const Doctor &doctor);
 
-
+   static const string SpecializationList[4] ;
+   static string GetSpecializationByIdx (int);
 private:
     string email;
     int experienceYears;
@@ -66,10 +66,13 @@ private:
     int startingHour , endingHours ; // 24 hours clock format
     double rates , onLineRates; // appointment rates
 
-    static const std::string SpecializationList[4] ;
 };
 
-const std::string Doctor::SpecializationList[4] = { "Gynecologist" , "Dermatologist" , "Oncologist" , "Orthopedic" };
+const string Doctor::SpecializationList[4] = { "Gynecologist" , "Dermatologist" , "Oncologist" , "Orthopedic" };
+string Doctor::GetSpecializationByIdx(int idx) {
+    if (idx >= 0 && idx < 4) return SpecializationList[idx];
+    return "NULL";
+}
 
 /* Constructor */
 
@@ -97,15 +100,15 @@ Doctor::Doctor(const string &name, const string &cnicNumber, const string &passw
 
 /* Getter Setter */
 
-const string Doctor::getEmail() const { return email;}
+string Doctor::getEmail() const { return email;}
 void Doctor::setEmail(const string &email) {this->email = email;}
 int Doctor::getExperienceYears() const {return experienceYears;}
 void Doctor::setExperienceYears(int experienceYears) {this->experienceYears = experienceYears;}
-const string Doctor::getHospitalName() const { return hospitalName;}
+string Doctor::getHospitalName() const { return hospitalName;}
 void Doctor::setHospitalName(const string &hospitalName) { this->hospitalName = hospitalName;}
-const string Doctor::getCity() const { return city;}
+string Doctor::getCity() const { return city;}
 void Doctor::setCity(const string &city) { this->city = city;}
-const string Doctor::getSpecializationArea() const { return specializationArea;}
+string Doctor::getSpecializationArea() const { return specializationArea;}
 void Doctor::setSpecializationArea(const string &specializationArea) {this->specializationArea = specializationArea;}
 int Doctor::getStartingHour() const { return startingHour;}
 void Doctor::setStartingHour(int startingHour) {this->startingHour = startingHour;}

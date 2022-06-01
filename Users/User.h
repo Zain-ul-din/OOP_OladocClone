@@ -5,6 +5,8 @@
 #define USER_H
 
 #include <iostream>
+#include "../Login/Validator.h"
+#include "../FileManager/SaveSystem.h"
 
 using namespace std;
 

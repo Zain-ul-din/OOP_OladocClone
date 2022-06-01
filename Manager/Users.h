@@ -5,9 +5,8 @@
 #ifndef USERS_H
 #define USERS_H
 
-#include "../FileManager/SaveSystem.h"
-#include "../Helpers/Input.h"
-#include "../Helpers/ErrorHandler.h"
+#include "../Users/Doctor.h"
+
 
 class Users;
 

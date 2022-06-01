@@ -3,11 +3,12 @@
 
 CMakeFiles/PaidProject.dir/main.cpp.obj
  D:/C++/PaidProject/FileManager/SaveSystem.h
- D:/C++/PaidProject/Login/CnicValidator.h
- D:/C++/PaidProject/Login/EmailValidator.h
- D:/C++/PaidProject/Login/PasswordValidator.h
+ D:/C++/PaidProject/Helpers/ErrorHandler.h
+ D:/C++/PaidProject/Helpers/Input.h
  D:/C++/PaidProject/Login/Validator.h
+ D:/C++/PaidProject/Manager/Doctors.h
  D:/C++/PaidProject/Manager/OldaDoc_Manager.h
+ D:/C++/PaidProject/Manager/Users.h
  D:/C++/PaidProject/OlaDoc.h
  D:/C++/PaidProject/Users/Doctor.h
  D:/C++/PaidProject/Users/User.h

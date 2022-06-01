@@ -10,13 +10,13 @@
 
 using namespace std;
 
-string PrintError (const char*);
+void PrintError (const char*);
 string GetString (const char*);
 int GetInt (const char*);
 double GetDouble(const char*);
 
 // @ Displays Error
-string PrintError (const char* message) { cout << "\n Error : " << message << " \n"; }
+void PrintError (const char* message) { cout << "\n Error : " << message << " \n"; }
 
 // @ Gets String Input
 string GetString (const char* message) {

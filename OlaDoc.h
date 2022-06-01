@@ -13,9 +13,12 @@ using namespace std;
 
 class OlaDoc {
 public:
+     OlaDoc() {
+         doctors.SignUp();
+     }
 
 private:
-
+      Doctors doctors;
 };
 
 
