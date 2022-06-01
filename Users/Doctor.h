@@ -24,10 +24,9 @@ public:
     /* Constructor */
 
     Doctor();
-
-    Doctor(const std::string &name, const std::string &cnicNumber, unsigned int password, const std::string &email,
-           int experienceYears, const std::string &hospitalName, const std::string &city,
-           const std::string &specializationArea, int startingHour, int endingHours, double rates, double onLineRates);
+    Doctor(const string &name, const string &cnicNumber, const string &password, const string &email,
+           int experienceYears, const string &hospitalName, const string &city, const string &specializationArea,
+           int startingHour, int endingHours, double rates, double onLineRates);
 
     /* Getter Setter */
 
@@ -74,14 +73,6 @@ const std::string Doctor::SpecializationList[4] = { "Gynecologist" , "Dermatolog
 
 /* Constructor */
 
-Doctor::Doctor(const std::string &name, const std::string &cnicNumber, unsigned int password, const std::string &email,
-               int experienceYears, const std::string &hospitalName, const std::string &city,
-               const std::string &specializationArea, int startingHour, int endingHours, double rates,
-               double onLineRates) : User(name, cnicNumber, password), email(email), experienceYears(experienceYears),
-                                     hospitalName(hospitalName), city(city), specializationArea(specializationArea),
-                                     startingHour(startingHour), endingHours(endingHours), rates(rates),
-                                     onLineRates(onLineRates) {}
-
 Doctor::Doctor() {
     this->email = "undefined";
     this->specializationArea = SpecializationList[0];
@@ -94,6 +85,15 @@ Doctor::Doctor() {
     this->onLineRates = 0;
 }
 
+Doctor::Doctor(const string &name, const string &cnicNumber, const string &password, const string &email,
+               int experienceYears, const string &hospitalName, const string &city, const string &specializationArea,
+               int startingHour, int endingHours, double rates, double onLineRates) : User(name, cnicNumber, password),
+                                                                                      email(email),
+                                                                                      experienceYears(experienceYears),
+                                                                                      hospitalName(hospitalName),
+                                                                                      city(city), specializationArea(
+                specializationArea), startingHour(startingHour), endingHours(endingHours), rates(rates),
+                                                                                      onLineRates(onLineRates) {}
 
 /* Getter Setter */
 
@@ -124,6 +124,7 @@ bool Doctor::operator!=(const Doctor &rhs) const { return !(rhs == *this);}
 ostream &operator<<(ostream &os, const Doctor &doctor) {
     return os;
 }
+
 
 
 

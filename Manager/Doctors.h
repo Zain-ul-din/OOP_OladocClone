@@ -118,16 +118,20 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
     }
 
     // sign Up Logic
-    string password = GetString(" >> Enter password : ");
-    string passwordCheck = "";
+    string password = "" , passwordCheck = "";
 
     // Verify Password
     do {
+        password = GetString(" >> Enter password : ");
         passwordCheck = GetString(" >> Retype password : ");
         if (passwordCheck != password) PrintError("2nd password is not matching with 1st one please retype again");
     } while (passwordCheck != password);
 
+    (*doctor)->setPassword(password);
 
+    // gets doctor associated data
+
+    
     /*
      * string email;
     int experienceYears;
