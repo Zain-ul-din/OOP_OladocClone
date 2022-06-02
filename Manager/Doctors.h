@@ -25,6 +25,8 @@ public:
     void LoadData() override;
     void SaveData() override;
 
+    void Update(string options = "") override;
+
     int currentLoggedInDoctorIdx;
     Doctor** doctors = NULL;
 
@@ -56,8 +58,23 @@ void Doctors::SignUp() {
 void Doctors::SignIn() {
      Doctor* doctor = new Doctor ();
      string userName = GetString("Enter User Name : ");
-     if(!IsConatins(*doctor)) return;
-     string password = GetString("Enter Password : ");
+     doctor->setName(userName);
+         if(!IsConatins(*doctor))
+     {
+         PrintError("User don't exists please use sign up instead !");
+         return;
+     }
+        int attempts = 0;
+        for ( ; attempts < 3 ; attempts += 1)
+     {
+         string password = GetString("Enter Password : ");
+         doctor->setPassword(password);
+         if (CheckPassword(*doctor)) break;
+         PrintError("Wrong password Please type correct password !");
+     }
+
+     if (attempts >= 3) PrintError("Some thing went wrong Login Fail");
+
      // Password Check
      if (!CheckPassword(*doctor)) return;
      this->currentLoggedInDoctorIdx = GetIdxOf(*doctor);
@@ -126,7 +143,7 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
 
     // sign Up Logic
     string password = GetPassword
-    ("Enter password ( Password must be 8 characters long and the use of a minimum of one special character , uppercase , lowercase , and the numeric digit is a must ) : ") ,   name;
+    ("Enter password ( Password must be 8 characters , have one special character , uppercase , lowercase , and the numeric digit ) : ") ,   name;
     (*doctor)->setPassword(password);
 
     bool isNameAlreadyTaken = false;
@@ -134,7 +151,7 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
     {
         name = GetString("Enter user name _ ");
         isNameAlreadyTaken = FindDoctorByUserName(name) != -1;
-        if (isNameAlreadyTaken) cout << " Name Already Taken please use new name ";
+        if (isNameAlreadyTaken) PrintError("Name Already Taken please use new name ");
     }
         while (isNameAlreadyTaken);
 
@@ -192,6 +209,10 @@ int Doctors::FindDoctorByUserName(string &name) {
     for (int  i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1)
            if (name == this->doctors[i]->getName()) return i;
     return -1;
+}
+
+void Doctors::Update(string options) {
+
 }
 
 #endif //DOCTORS_H
