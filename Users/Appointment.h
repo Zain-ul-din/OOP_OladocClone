@@ -16,10 +16,11 @@ private:
     double appointmentCost;
     Time appointmentTime;
     string appointmentType;
+    string appointmentStatus;
 
-    static string appointmentStatus[3];
+    static string appointmentsStatus[3];
 };
 
-string Appointment::appointmentStatus[3] = { "approve" , "pending" "reject" };
+string Appointment::appointmentsStatus[3] = { "approve" , "pending" "reject" };
 
 #endif //APPOINTMENT_H

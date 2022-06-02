@@ -55,6 +55,8 @@ bool ValidatePassword(string &password, const int length) {
         for (int idx = 0; idx < SYMBOLS.length(); idx += 1)
             if (password[i] == SYMBOLS[idx]) isValid = true;
 
+    for (int  i = 0 ; i < password.length() ; i += 1)
+        if (password[i] == ' ') isValid = false;
 
     return isValid;
 }

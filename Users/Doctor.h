@@ -30,47 +30,26 @@ public:
     /* Getter Setter */
 
     string getEmail() const;
-
     void setEmail(const string &email);
-
     int getExperienceYears() const;
-
     void setExperienceYears(int experienceYears);
-
     string getHospitalName() const;
-
     void setHospitalName(const string &hospitalName);
-
     string getCity() const;
-
     void setCity(const string &city);
-
     string getSpecializationArea() const;
-
     void setSpecializationArea(const string &specializationArea);
-
     int getStartingHour() const;
-
     void setStartingHour(int startingHour);
-
     int getEndingHours() const;
-
     void setEndingHours(int endingHours);
-
     double getRates() const;
-
     void setRates(double rates);
-
     double getOnLineRates() const;
-
     void setOnLineRates(double onLineRates);
-
     float getRating() const;
-
     void setRating(float rating);
-
     string getAvailableDays() const;
-
     void setAvailableDays(const string &availableDays);
 
     /* Overrides */
@@ -80,26 +59,21 @@ public:
     /* Operator OverLoading */
 
     bool operator==(const Doctor &rhs) const;
-
     bool operator!=(const Doctor &rhs) const;
 
     /* IO */
 
     friend ostream &operator<<(ostream &os, const Doctor &doctor);
-
     friend ofstream &operator<<(ofstream &outFile, const Doctor &doctor);
 
     /* Static */
 
     static const string SpecializationList[4];
-
     static string GetSpecializationByIdx(int);
-
+    static Doctor* StrToObj (string&);
     /* Helpers */
     void InputSpecializationArea();
-
     void InputAppointmentsTime();
-
     void InputAvailableDays(bool canEdit);
 
 private:
@@ -161,47 +135,26 @@ Doctor::Doctor(const string &name, const string &cnicNumber, const string &passw
 /* Getter Setter */
 
 string Doctor::getEmail() const { return email; }
-
 void Doctor::setEmail(const string &email) { this->email = email; }
-
 int Doctor::getExperienceYears() const { return experienceYears; }
-
 void Doctor::setExperienceYears(int experienceYears) { this->experienceYears = experienceYears; }
-
 string Doctor::getHospitalName() const { return hospitalName; }
-
 void Doctor::setHospitalName(const string &hospitalName) { this->hospitalName = hospitalName; }
-
 string Doctor::getCity() const { return city; }
-
 void Doctor::setCity(const string &city) { this->city = city; }
-
 string Doctor::getSpecializationArea() const { return specializationArea; }
-
 void Doctor::setSpecializationArea(const string &specializationArea) { this->specializationArea = specializationArea; }
-
 int Doctor::getStartingHour() const { return startingHour; }
-
 void Doctor::setStartingHour(int startingHour) { this->startingHour = startingHour; }
-
 int Doctor::getEndingHours() const { return endingHours; }
-
 void Doctor::setEndingHours(int endingHours) { this->endingHours = endingHours; }
-
 double Doctor::getRates() const { return rates; }
-
 void Doctor::setRates(double rates) { this->rates = rates; }
-
 double Doctor::getOnLineRates() const { return onLineRates; }
-
 void Doctor::setOnLineRates(double onLineRates) { this->onLineRates = onLineRates; }
-
 float Doctor::getRating() const { return rating; }
-
 void Doctor::setRating(float rating) { this->rating = rating; }
-
 string Doctor::getAvailableDays() const { return this->availableDays; }
-
 void Doctor::setAvailableDays(const string &availableDays) { this->availableDays = availableDays; }
 
 /* Operator OverLoading */
@@ -212,25 +165,53 @@ bool Doctor::operator==(const Doctor &rhs) const {
 
 bool Doctor::operator!=(const Doctor &rhs) const { return !(rhs == *this); }
 
-ostream &operator<<(ostream &os, const Doctor &doctor) { return os; }
+ostream &operator << (ostream &os, const Doctor &doctor) { return os; }
 
 // File Write Format
 ofstream &operator<<(ofstream &outFile, const Doctor &doctor) {
-    outFile << Replace(doctor.name) << reserveSeparator
-            << Replace(doctor.cnicNumber) << reserveSeparator
-            << Replace(doctor.password) << reserveSeparator
-            << Replace(doctor.email) << reserveSeparator
-            << doctor.experienceYears << reserveSeparator
-            << Replace(doctor.hospitalName) << reserveSeparator
-            << Replace(doctor.city) << reserveSeparator
-            << Replace(doctor.specializationArea) << reserveSeparator
-            << doctor.startingHour << reserveSeparator
-            << doctor.endingHours << reserveSeparator
-            << doctor.rates << reserveSeparator
-            << doctor.onLineRates << reserveSeparator
-            << doctor.rating << reserveSeparator
-            << doctor.availableDays << "\n";
+    outFile << Replace(doctor.name) << reserveSeparator // 0
+            << Replace(doctor.cnicNumber) << reserveSeparator // 1
+            << Replace(doctor.password) << reserveSeparator // 2
+            << Replace(doctor.email) << reserveSeparator // 3
+            << doctor.experienceYears << reserveSeparator // 4
+            << Replace(doctor.hospitalName) << reserveSeparator // 5
+            << Replace(doctor.city) << reserveSeparator // 6
+            << Replace(doctor.specializationArea) << reserveSeparator // 7
+            << doctor.startingHour << reserveSeparator // 8
+            << doctor.endingHours << reserveSeparator // 9
+            << doctor.rates << reserveSeparator // 10
+            << doctor.onLineRates << reserveSeparator // 11
+            << doctor.rating << reserveSeparator // 12
+            << doctor.availableDays << "\n"; // 13
     return outFile;
+}
+
+// Loading Data
+Doctor *Doctor::StrToObj(string &str) {
+    string aux [14];
+
+    int idx = 0;
+    for (int  i = 0 ; i < str.length() ; i += 1)
+        if (str[i] == reserveSeparator) idx += 1;
+        else aux[idx].push_back(str[i]);
+
+    Doctor* doctor = new Doctor();
+    doctor->name = Replace(aux[0] , '_' , ' ');
+    doctor->cnicNumber = aux[1];
+    doctor->password = aux[2];
+    doctor->email = aux[3];
+    doctor->experienceYears = stoi(aux[4]);
+    doctor->hospitalName = Replace(aux[5] , '_' , ' ');
+    doctor->city = Replace(aux[6] , '_' , ' ');
+    doctor->specializationArea = aux[7];
+    doctor->startingHour = stoi(aux[8]);
+    doctor->endingHours = stoi(aux[9]);
+    doctor->rates = stod(aux[10]);
+    doctor->onLineRates = stod(aux[11]);
+    doctor->rating = stof(aux[12]);
+    doctor->availableDays = aux[13];
+
+    return doctor;
 }
 
 /* Overrides */
@@ -351,11 +332,11 @@ void Doctor::InputAvailableDays(bool canEdit = false) {
                     {
                         if (IsContainsChar(this->availableDays, to_string(choice)))
                             cout << " ! Already Added \n";
-                        else
-                            {
+                            else
+                        {
                               this->availableDays.push_back(to_string(choice)[0]);
                               cout << " -- Added\n";
-                            }
+                        }
                     }
                 }       else PrintError("Invalid Choice");
             }
@@ -366,6 +347,8 @@ void Doctor::InputAvailableDays(bool canEdit = false) {
     }
     cout << " -- All set\n";
 }
+
+
 
 
 #endif //DOCTOR_H

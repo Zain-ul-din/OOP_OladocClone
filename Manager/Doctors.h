@@ -21,7 +21,6 @@ public:
     void SignIn() override;
 
     void Delete(string options = "") override;
-    void Update(string options = "") override;
 
     void LoadData() override;
     void SaveData() override;
@@ -74,6 +73,11 @@ void Doctors::LoadData() {
         return;
     }
 
+    string aux;
+    while (getline(in , aux , '\n')){
+        idx += 1;
+        this->doctors[idx] = Doctor::StrToObj(aux);
+    }
     in.close();
 }
 
@@ -95,9 +99,7 @@ void Doctors::Delete(string options ) {
 
 }
 
-void Doctors::Update(string options ) {
 
-}
 
 /*  Helpers */
 
