@@ -139,6 +139,7 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
 
     (*doctor)->InputSpecializationArea();
 
+    (*doctor)->InputAvailableDays();
     int experienceYears = Clamp(GetInput<int>("How many years of experience you have _ ") , 0 , 100);
     string hospitalName  = GetString("Enter you're hospital name _ ")
     , city = GetString("Enter city name _ ");

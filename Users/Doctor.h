@@ -23,10 +23,9 @@ public:
     /* Constructor */
 
     Doctor();
-
     Doctor(const string &name, const string &cnicNumber, const string &password, int experienceYears, float rating,
            const string &email, const string &hospitalName, const string &city, const string &specializationArea,
-           int startingHour, int endingHours, double rates, double onLineRates);
+           int startingHour, int endingHours, double rates, double onLineRates , string& availableDays);
 
     /* Getter Setter */
 
@@ -50,7 +49,8 @@ public:
     void setOnLineRates(double onLineRates);
     float getRating() const;
     void setRating(float rating);
-
+    string getAvailableDays() const;
+    void setAvailableDays(const string &availableDays);
     /* Overrides */
 
     void Update() override;
@@ -73,13 +73,15 @@ public:
    /* Helpers */
    void InputSpecializationArea ();
    void InputAppointmentsTime();
+   void InputAvailableDays(bool canEdit );
+
 private:
-    int experienceYears ;
+    int experienceYears;
     float rating;
     string  email, hospitalName   , city , specializationArea;
     int startingHour , endingHours ; // 24 hours clock format
     double rates , onLineRates; // appointment rates
-
+    string availableDays;
 };
 
 const string Doctor::SpecializationList[4] = { "Gynecologist" , "Dermatologist" , "Oncologist" , "Orthopedic" };
@@ -101,14 +103,15 @@ Doctor::Doctor() {
     this->rates  = 0;
     this->onLineRates = 0;
     this->rating = 0;
+    this->availableDays = "";
 }
 
 Doctor::Doctor(const string &name, const string &cnicNumber, const string &password, int experienceYears, float rating,
                const string &email, const string &hospitalName, const string &city, const string &specializationArea,
-               int startingHour, int endingHours, double rates, double onLineRates) : User(name, cnicNumber, password),
+               int startingHour, int endingHours, double rates, double onLineRates , string& availableDays) : User(name, cnicNumber, password),
                experienceYears(experienceYears),rating(rating), email(email),hospitalName(hospitalName),
                city(city), specializationArea(specializationArea), startingHour(startingHour), endingHours(endingHours), rates(rates),
-               onLineRates(onLineRates) {}
+               onLineRates(onLineRates) , availableDays(availableDays){}
 
 /* Getter Setter */
 
@@ -132,15 +135,15 @@ double Doctor::getOnLineRates() const { return onLineRates; }
 void Doctor::setOnLineRates(double onLineRates) { this->onLineRates = onLineRates;}
 float Doctor::getRating() const { return rating;}
 void Doctor::setRating(float rating) { this->rating = rating;}
+string Doctor::getAvailableDays() const { return this->availableDays;}
+void Doctor::setAvailableDays(const string &availableDays) { this->availableDays = availableDays;}
 
 /* Operator OverLoading */
 
 bool Doctor::operator == (const Doctor &rhs) const { return this->email == rhs.email || this->cnicNumber == rhs.email || this->name == rhs.name;}
 bool Doctor::operator!=(const Doctor &rhs) const { return !(rhs == *this);}
 
-ostream &operator<<(ostream &os, const Doctor &doctor) {
-    return os;
-}
+ostream &operator<<(ostream &os, const Doctor &doctor) { return os;}
 
 // File Write Format
 ofstream &operator << (ofstream & outFile , const Doctor& doctor ) {
@@ -156,7 +159,8 @@ ofstream &operator << (ofstream & outFile , const Doctor& doctor ) {
              << doctor.endingHours << reserveSeparator
              << doctor.rates << reserveSeparator
              << doctor.onLineRates  << reserveSeparator
-             << doctor.rating << "\n";
+             << doctor.rating << reserveSeparator
+             << doctor.availableDays <<"\n";
     return outFile;
 }
 
@@ -211,6 +215,51 @@ void Doctor::InputAppointmentsTime() {
     "ending time must be greater then starting time") , 1 , 24 ) ;
     cout << "\n\t" << this->startingHour  << " to " << this->endingHours << "\n";
 }
+
+void Doctor::InputAvailableDays(bool canEdit = false) {
+
+     cout << "\n Select in which Days You'll Available \n";
+     cout << "  - Monday    - 0\n";
+     cout << "  - Tuesday   - 1\n";
+     cout << "  - Wednesday - 2\n";
+     cout << "  - Thursday  - 3\n";
+     cout << "  - Friday    - 4\n";
+     cout << "  - saturday  - 5\n";
+     cout << "  - sunday    - 6\n";
+
+     int choice = GetInput<int>("Select Day  _ ");
+     if ( IsInRange (choice , 0 , 6) ) {
+         cout << " Day : " << Time::daysName[choice] << "\n";
+         if (canEdit) {
+             cout << " - Add Day    - 1 \n";
+             cout << " - Remove Day - 2 \n";
+             cout << " - Exit       - 3 \n";
+             int _choice = GetInput<int>("Enter choice _ ");
+             switch (_choice) {
+                 case 1:
+                     if (IsContainsChar(this->availableDays , to_string(choice)))
+                         cout << " ! Already Added \n";
+                     else
+                         this->availableDays.push_back(to_string(choice)[0]);
+                 case 2:
+                     RemoveChar(this->availableDays , to_string(choice)[0]);
+                 default:
+                     cout << " -- Never Mind \n";
+             }
+         } else{
+             if (IsContainsChar(this->availableDays , to_string(choice)))
+                 cout << " ! Already Added \n";
+             else
+                 this->availableDays.push_back(to_string(choice)[0]);
+         }
+     }
+     else PrintError("Invalid Choice");
+
+     if(GetChoice("Do You Want to Edit More Days ( Y/N ) _ "))
+         this->InputAvailableDays(canEdit);
+}
+
+
 
 /*
  * string name;
