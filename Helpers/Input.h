@@ -19,15 +19,6 @@ template<class TYPE> TYPE GetValueUnder (TYPE  , const char* , const char* );
 template<class TYPE> TYPE GetValueUpper (TYPE , const char* , const char*);
 template<class TYPE> TYPE GetInputInRange ( TYPE , TYPE   , const char * , const char *);
 
-// @ Get input in give range from user
-template<class TYPE>
-TYPE GetInputInRange( TYPE min , TYPE max , const char * message , const char* err ) {
-    TYPE aux ;
-    aux = GetInput<TYPE>(message);
-    if (aux >= min && aux <= max) return aux;
-    PrintError(err);
-    GetInputInRange( min , max , message , err);
-}
 
 // @ Displays Error
 void PrintError (const char* message) { cout << "\n Error : " << message << " \n"; }
@@ -45,33 +36,54 @@ string GetString (const char* message) {
 // @ Gets  input of Type <Any>
 template<class TYPE>
 TYPE GetInput (const char* message) {
-    cout  << "\n >> "<< message;
-    TYPE auxiliary ;
-    cin.clear(); // ! clear previous buffer
-    cin.sync(); // reset flags
-    cin >> auxiliary;
-    if (!cin.fail()) return auxiliary;
-    PrintError("Invalid Input");
-    GetInput<TYPE>(message);
+    TYPE auxiliary;
+        do
+    {
+        cout << "\n >> " << message;
+        cin.clear(); // ! clear previous buffer
+        cin.sync(); // reset flags
+        cin >> auxiliary;
+        if (cin.fail()) PrintError("Invalid Input");
+    }
+        while (cin.fail());
     return auxiliary;
+}
+
+// @ Get input in give range from user
+template<class TYPE>
+TYPE GetInputInRange( TYPE min , TYPE max , const char * message , const char* err ) {
+    TYPE aux ;
+        do
+    {
+        aux = GetInput<TYPE>(message);
+        if (!(aux >= min && aux <= max)) PrintError(err);
+    }
+        while (!(aux >= min && aux <= max));
+    return aux;
 }
 
 // @ Returns new Value that must be under the given value
 template<class TYPE>
 TYPE GetValueUnder(TYPE value , const char* message , const char* err) {
-    TYPE auxiliary = GetInput<TYPE>(message);
-    if (auxiliary < value) return value;
-    PrintError(err);
-    GetValueUnder<TYPE>(value , message , err);
+    TYPE auxiliary;
+        do
+    {
+        auxiliary = GetInput<TYPE>(message);
+        if (!(auxiliary < value)) PrintError(err);
+    }
+        while (!(auxiliary < value));
     return auxiliary;
 }
 
 // @ Returns new Value that must be greater then given value
 template<class TYPE> TYPE GetValueUpper (TYPE value , const char* message , const char* err) {
-    TYPE auxiliary = GetInput<TYPE>(message);
-    if (auxiliary > value) return value;
-    PrintError(err);
-    GetValueUpper<TYPE>(value , message , err);
+    TYPE auxiliary ;
+        do
+    {
+        auxiliary = GetInput<TYPE>(message);
+        if(!(auxiliary > value)) PrintError(err);
+    }
+        while (!(auxiliary > value));
     return auxiliary;
 }
 

@@ -113,9 +113,7 @@ bool Time::operator==(const Time &rhs) const {
            min == rhs.min;
 }
 
-bool Time::operator!=(const Time &rhs) const {
-    return !(rhs == *this);
-}
+bool Time::operator!=(const Time &rhs) const { return !(rhs == *this);}
 
 /* Helper's */
 

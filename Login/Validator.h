@@ -129,19 +129,23 @@ string GetPassword(const char *message, bool reCheck = true) {
     bool isValid = false;
     bool isMatch = false;
 
-    do {
-        do {
+        do
+    {
+            do
+        {
             password = GetString(message);
             isValid = ValidatePassword(password, 8);
             if (!isValid) PrintError("Invalid Password");
-        } while (!isValid);
+        }
+            while (!isValid);
 
         if (!reCheck) return password;
 
         reTypePassword = GetString("Retype password : ");
         isMatch = password == reTypePassword;
         if (!isMatch) PrintError("2nd password is not matching with 1st one please retype again");
-    } while (!isMatch);
+    }
+        while (!isMatch);
 
     return password;
 }
@@ -152,11 +156,13 @@ string GetPassword(const char *message, bool reCheck = true) {
 string GetEmail(const char *message) {
     string email;
     bool isValid = false;
-    do {
+        do
+    {
         email = GetString(message);
         isValid = ValidateEmail(email, "@gmail.com");
         if (!isValid) PrintError("Invalid email address please enter correct one ");
-    } while (!isValid);
+    }
+        while (!isValid);
     return email;
 }
 
@@ -166,11 +172,13 @@ string GetEmail(const char *message) {
 string GetCnic(const char *message) {
     string cnic;
     bool isValid = false;
-    do {
+        do
+    {
         cnic = GetString(message);
         isValid = ValidateCnic(cnic);
         if (!isValid) PrintError("Invalid Cnic Number ! cnic should be 13 digits ");
-    } while (!isValid);
+    }
+        while (!isValid);
     return cnic;
 }
 

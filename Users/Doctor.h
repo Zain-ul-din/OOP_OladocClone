@@ -213,50 +213,71 @@ void Doctor::InputAppointmentsTime() {
      , "Value must be greater then zero ") , 1 , 24);
     this->endingHours = Clamp(GetValueUpper<int>( this->startingHour , "Enter appointments ending Time WRT => 24 Hour format _  " ,
     "ending time must be greater then starting time") , 1 , 24 ) ;
-    cout << "\n\t" << this->startingHour  << " to " << this->endingHours << "\n";
+    cout << "\n\t timing : " << this->startingHour  << " to " << this->endingHours << "\n";
 }
 
 void Doctor::InputAvailableDays(bool canEdit = false) {
 
-     cout << "\n Select in which Days You'll Available \n";
-     cout << "  - Monday    - 0\n";
-     cout << "  - Tuesday   - 1\n";
-     cout << "  - Wednesday - 2\n";
-     cout << "  - Thursday  - 3\n";
-     cout << "  - Friday    - 4\n";
-     cout << "  - saturday  - 5\n";
-     cout << "  - sunday    - 6\n";
+    cout << "\n Enter In which days You'll be Available \n";
+    cout << " - Full Week               - 0\n";
+    cout << " - Weekend                 - 1 \n";
+    cout << " - All Days except weekend = 2 \n";
+    cout << " - Let Me Choose           - 3 \n";
+    int userChoice = GetInputInRange(0 , 3 , " Enter Choice _ " , "Invalid Choice Please Select valid choice ");
+switch(userChoice) {
+    case 0 :
+        this->availableDays = "0123456";
+        break;
+    case 1:
+        this->availableDays = "56";
+    case 2:
+        this->availableDays = "01234";
+    case 3:
+            do
+        {
+            cout << "\n Select in which Days You'll be Available \n";
+            cout << "  - Monday    - 0\n";
+            cout << "  - Tuesday   - 1\n";
+            cout << "  - Wednesday - 2\n";
+            cout << "  - Thursday  - 3\n";
+            cout << "  - Friday    - 4\n";
+            cout << "  - saturday  - 5\n";
+            cout << "  - sunday    - 6\n";
 
-     int choice = GetInput<int>("Select Day  _ ");
-     if ( IsInRange (choice , 0 , 6) ) {
-         cout << " Day : " << Time::daysName[choice] << "\n";
-         if (canEdit) {
-             cout << " - Add Day    - 1 \n";
-             cout << " - Remove Day - 2 \n";
-             cout << " - Exit       - 3 \n";
-             int _choice = GetInput<int>("Enter choice _ ");
-             switch (_choice) {
-                 case 1:
-                     if (IsContainsChar(this->availableDays , to_string(choice)))
-                         cout << " ! Already Added \n";
-                     else
-                         this->availableDays.push_back(to_string(choice)[0]);
-                 case 2:
-                     RemoveChar(this->availableDays , to_string(choice)[0]);
-                 default:
-                     cout << " -- Never Mind \n";
-             }
-         } else{
-             if (IsContainsChar(this->availableDays , to_string(choice)))
-                 cout << " ! Already Added \n";
-             else
-                 this->availableDays.push_back(to_string(choice)[0]);
-         }
-     }
-     else PrintError("Invalid Choice");
-
-     if(GetChoice("Do You Want to Edit More Days ( Y/N ) _ "))
-         this->InputAvailableDays(canEdit);
+            int choice = GetInput<int>("Select Day  _ ");
+            if (IsInRange(choice, 0, 6)) {
+                cout << " Day : " << Time::daysName[choice] << "\n";
+                if (canEdit) {
+                    cout << " - Add Day    - 1 \n";
+                    cout << " - Remove Day - 2 \n";
+                    cout << " - Exit       - 3 \n";
+                    int _choice = GetInput<int>("Enter choice _ ");
+                    switch (_choice) {
+                        case 1:
+                            if (IsContainsChar(this->availableDays, to_string(choice)))
+                                cout << " ! Already Added \n";
+                            else
+                                this->availableDays.push_back(to_string(choice)[0]);
+                            cout << " -- Added\n";
+                        case 2:
+                            RemoveChar(this->availableDays, to_string(choice)[0]);
+                        default:
+                            cout << " -- Never Mind \n";
+                    }
+                } else {
+                    if (IsContainsChar(this->availableDays, to_string(choice)))
+                        cout << " ! Already Added \n";
+                    else
+                        this->availableDays.push_back(to_string(choice)[0]);
+                }
+            } else PrintError("Invalid Choice");
+        }
+            while (GetChoice("Do You Want to Edit More Days ( Y/N ) _ "));
+    break;
+    default:
+        cout << " -- Never Mind \n";
+}
+cout << " -- All set\n";
 }
 
 

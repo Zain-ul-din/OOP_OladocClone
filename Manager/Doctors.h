@@ -128,18 +128,20 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
     (*doctor)->setPassword(password);
 
     bool isNameAlreadyTaken = false;
-    do {
+        do
+    {
         name = GetString("Enter user name _ ");
         isNameAlreadyTaken = FindDoctorByUserName(name) != -1;
         if (isNameAlreadyTaken) cout << " Name Already Taken please use new name ";
-    } while (isNameAlreadyTaken);
+    }
+        while (isNameAlreadyTaken);
 
     // gets doctor associated data
     cout << "\n -- You're almost done with registration please provide some information about you :-) \n";
 
     (*doctor)->InputSpecializationArea();
-
     (*doctor)->InputAvailableDays();
+
     int experienceYears = Clamp(GetInput<int>("How many years of experience you have _ ") , 0 , 100);
     string hospitalName  = GetString("Enter you're hospital name _ ")
     , city = GetString("Enter city name _ ");
