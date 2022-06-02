@@ -41,7 +41,7 @@ int main () {
 //        std::cout << "true";
 //    } else std::cout << "False";
 
-   // OlaDoc olaDoc;
+    OlaDoc olaDoc;
 
     return 0;
 }

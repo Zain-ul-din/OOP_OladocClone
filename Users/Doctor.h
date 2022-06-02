@@ -24,8 +24,8 @@ public:
 
     Doctor();
     Doctor(const string &name, const string &cnicNumber, const string &password, const string &email,
-           int experienceYears, const string &hospitalName, const string &city, const string &specializationArea,
-           int startingHour, int endingHours, double rates, double onLineRates);
+    int experienceYears, const string &hospitalName, const string &city, const string &specializationArea,
+    int startingHour, int endingHours, double rates, double onLineRates);
 
     /* Getter Setter */
 
@@ -48,21 +48,30 @@ public:
     double getOnLineRates() const;
     void setOnLineRates(double onLineRates);
 
+    /* Overrides */
+
+    void Update() override;
+
     /* Operator OverLoading */
 
    bool operator==(const Doctor &rhs) const;
    bool operator!=(const Doctor &rhs) const;
 
    /* IO */
+
    friend ostream &operator << (ostream &os, const Doctor &doctor);
+   friend ofstream &operator << (ofstream & outFile , const Doctor& doctor );
+
+   /* Static */
 
    static const string SpecializationList[4] ;
    static string GetSpecializationByIdx (int);
+
+   /* Helpers */
+   void InputSpecializationArea ();
 private:
-    string email;
     int experienceYears;
-    string hospitalName   , city;
-    string specializationArea;
+    string  email, hospitalName   , city , specializationArea;
     int startingHour , endingHours ; // 24 hours clock format
     double rates , onLineRates; // appointment rates
 
@@ -89,14 +98,11 @@ Doctor::Doctor() {
 }
 
 Doctor::Doctor(const string &name, const string &cnicNumber, const string &password, const string &email,
-               int experienceYears, const string &hospitalName, const string &city, const string &specializationArea,
-               int startingHour, int endingHours, double rates, double onLineRates) : User(name, cnicNumber, password),
-                                                                                      email(email),
-                                                                                      experienceYears(experienceYears),
-                                                                                      hospitalName(hospitalName),
-                                                                                      city(city), specializationArea(
-                specializationArea), startingHour(startingHour), endingHours(endingHours), rates(rates),
-                                                                                      onLineRates(onLineRates) {}
+        int experienceYears, const string &hospitalName, const string &city, const string &specializationArea,
+        int startingHour, int endingHours, double rates, double onLineRates) : User(name, cnicNumber, password),
+        email(email), experienceYears(experienceYears) , hospitalName(hospitalName), city(city) ,
+        specializationArea(specializationArea), startingHour(startingHour), endingHours(endingHours), rates(rates),
+        onLineRates(onLineRates) {}
 
 /* Getter Setter */
 
@@ -128,7 +134,51 @@ ostream &operator<<(ostream &os, const Doctor &doctor) {
     return os;
 }
 
+// File Write Format
+ofstream &operator << (ofstream & outFile , const Doctor& doctor ) {
+     outFile << Replace(doctor.name) << reserveSeparator
+             << Replace(doctor.cnicNumber) << reserveSeparator
+             << Replace(doctor.password) << reserveSeparator
+             << Replace(doctor.email) << reserveSeparator
+             << doctor.experienceYears << reserveSeparator
+             << Replace(doctor.hospitalName) << reserveSeparator
+             << Replace(doctor.city) << reserveSeparator
+             << Replace(doctor.specializationArea) << reserveSeparator
+             << doctor.startingHour << reserveSeparator
+             << doctor.endingHours << reserveSeparator
+             << doctor.rates << reserveSeparator
+             << doctor.onLineRates << "\n";
+    return outFile;
+}
 
+/* Overrides */
 
+void Doctor::Update() {
+     cout << "\n -- Edit Menu \n";
+     cout << "  - Edit  specialization area      - 1\n";
+     cout << "  - Edit Location (city )          - 2\n";
+     cout << "  - Edit Hospital Name             - 3\n";
+     cout << "  - Edit appointment starting time - 4\n";
+}
+
+void Doctor::InputSpecializationArea() {
+    cout << "\n -- Select You're specialization area\n";
+    for (int  i = 0 ; i < 4; i  += 1) cout << "  - " << SpecializationList[i] << " - " << i <<"\n";
+    int idx = GetInputInRange(0 , 3 , "\n >> Enter you're selection _  " , "Invalid Choice");
+    this->specializationArea = GetSpecializationByIdx(idx);
+    cout << "\n You Select _ " << specializationArea << "\n";
+}
+
+/*
+ * string name;
+    string cnicNumber;
+    string password;
+    string email;
+    int experienceYears;
+    string hospitalName   , city;
+    string specializationArea;
+    int startingHour , endingHours ; // 24 hours clock format
+    double rates , onLineRates; // appointment rates
+ */
 
 #endif //DOCTOR_H

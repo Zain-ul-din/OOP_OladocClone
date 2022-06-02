@@ -4,9 +4,10 @@
 #ifndef USER_H
 #define USER_H
 
-#include <iostream>
+
 #include "../Login/Validator.h"
 #include "../FileManager/SaveSystem.h"
+
 
 using namespace std;
 
@@ -37,6 +38,7 @@ public:
 
     /* Virtual Functions */
 
+    virtual void Update () = 0;
 protected:
     string name;
     string cnicNumber;

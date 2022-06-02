@@ -38,7 +38,8 @@ private:
     bool IsConatins (Doctor& doctor); // returns => doctor exists in record
     bool CheckPassword (Doctor& doctor); // password checker
     int  GetIdxOf (Doctor& doctor); // returns => Idx of doctor in record
-    bool FindsDoctorUserName (string& name); // returns => doctor name in record
+
+    int FindDoctorByUserName (string& name); // returns => doctor name in record
 };
 
 const string Doctors::DOCTORS_FILEPATH = "DOCTORS_DATA.text";
@@ -64,7 +65,6 @@ void Doctors::SignIn() {
 }
 
 
-
 void Doctors::LoadData() {
     ifstream in;
     in.open(DOCTORS_FILEPATH , ios::in);
@@ -80,11 +80,15 @@ void Doctors::LoadData() {
 void Doctors::SaveData() {
     ofstream out;
     out.open(DOCTORS_FILEPATH , ios::out);
-    if (out.fail() || this->doctors[0] == NULL) {
+
+    if (out.fail()) {
         out.close();
         return ;
     }
 
+    for (int  i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1)
+        out << *(this->doctors[i]);
+    out.close();
 }
 
 void Doctors::Delete(string options ) {
@@ -98,6 +102,7 @@ void Doctors::Update(string options ) {
 /*  Helpers */
 
 void Doctors::Init() {
+    idx = -1;
     currentLoggedInDoctorIdx = -1;
     this->doctors = new Doctor*[MAX];
     for (int i = 0 ; i < MAX ; i += 1) this->doctors[i] = NULL;
@@ -125,42 +130,33 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
     bool isNameAlreadyTaken = false;
     do {
         name = GetString(" >> Enter user name _ ");
-        isNameAlreadyTaken = FindsDoctorUserName(name);
-        if (isNameAlreadyTaken)
-            cout << " Name Already Taken please use new name ";
+        isNameAlreadyTaken = FindDoctorByUserName(name) == -1;
+        if (isNameAlreadyTaken) cout << " Name Already Taken please use new name ";
     } while (isNameAlreadyTaken);
 
     // gets doctor associated data
     cout << "\n -- You're almost done with registration please provide some information about you :-) \n";
 
-    string  specializationArea;
-    do {
-        cout << "\n -- Select You're specialization area\n";
-        for (int  i = 0 ; i < 4; i  += 1)
-            cout << " - " << Doctor::SpecializationList[i] << " - " << i <<"\n";
-        int choice = GetInput<int>("\n >> Enter you're selection _  ");
-        specializationArea = Doctor::GetSpecializationByIdx(choice);
-        if (specializationArea == "NULL") PrintError("Invalid Choice");
-        else cout << "\n You Select _ " << specializationArea << "\n";
-    } while (specializationArea == "NULL");
+    (*doctor)->InputSpecializationArea();
 
-    int experienceYears = GetInput<int>(" >> How many years of experience you have _ ");
+    int experienceYears = Clamp(GetInput<int>(" >> How many years of experience you have _ ") , 0 , 100);
     string hospitalName  = GetString(" >> Enter you're hospital name _ ")
     , city = GetString(" >> Enter city name _ ");
-    int startingHour = GetInput<int>(" >> Enter appointments starting Time WRT => 24 Hour format _  ")
-    , endingHours = GetInput<int>(" >> Enter appointments ending Time WRT => 24 Hour format _  ") ;
+    int startingHour = Clamp(GetValueUpper<int>(0 , " >> Enter appointments starting Time WRT => 24 Hour format _  " , "Value must be greater then zero ") , 1 , 24)
+    , endingHours = Clamp(GetValueUnder<int>( startingHour , " >> Enter appointments ending Time WRT => 24 Hour format _  " , "ending time must be greater then starting time") , 1 , 24 ) ;
     double rates  = GetInput<double>(" >> Enter in person appointment rate _ ")
     , onLineRates = GetInput<double>(" >> Enter online appointment rate _ ");
 
-    (*doctor)->setSpecializationArea(specializationArea);
+    (*doctor)->setName(name);
     (*doctor)->setExperienceYears(experienceYears);
+    (*doctor)->setCity(city);
     (*doctor)->setHospitalName(hospitalName);
     (*doctor)->setStartingHour(startingHour);
     (*doctor)->setEndingHours(endingHours);
     (*doctor)->setRates(rates);
     (*doctor)->setOnLineRates(onLineRates);
 
-    cout << "\n -- Regeneration Succeed :-) ";
+    cout << "\n -- Registration Succeed :-) ";
     cout << "\n -- Please use this userName and password to login";
     cout << "\n -- User Name : " << (*doctor)->getName() ;
     cout << "\n -- Password  : " << (*doctor)->getPassword() << "\n";
@@ -175,32 +171,25 @@ bool Doctors::IsConatins(Doctor &doctor) {
 }
 
 bool Doctors::CheckPassword(Doctor &doctor) {
-    int idx = 0 ;
-    while (this->doctors[idx] != NULL) {
+    for (int  i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1){
         Doctor* _doctor = this->doctors[idx];
-        if( _doctor->getPassword() == doctor.getPassword() && doctor.getName() == _doctor->getName()) return true;
-        idx += 1;
+        if( _doctor->getPassword() == doctor.getPassword() && doctor.getName() == _doctor->getName())
+            return true;
     }
+
     return false;
 }
 
 int Doctors::GetIdxOf(Doctor &doctor) {
-    int idx = 0 ;
-    while (this->doctors[idx] != NULL) {
-        if (doctor == *(this->doctors[idx]))
-            return idx;
-        idx += 1;
-    }
+    for (int  i = 0 ; i < MAX && this->doctors[i] != NULL ; i ++)
+        if (doctor == *(this->doctors[i])) return i;
     return -1;
 }
 
-bool Doctors::FindsDoctorUserName(string &name) {
-    int idx = 0;
-    while (this->doctors[idx] != NULL) {
-        if (name == this->doctors[idx]->getName()) return true;
-        idx += 1;
-    }
-    return false;
+int Doctors::FindDoctorByUserName(string &name) {
+    for (int  i = 0 ; i < MAX && this->doctors[idx] != NULL ; i += 1)
+        if (name == this->doctors[idx]->getName()) return idx;
+    return -1;
 }
 
 #endif //DOCTORS_H

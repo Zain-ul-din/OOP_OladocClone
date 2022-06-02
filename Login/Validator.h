@@ -6,7 +6,7 @@
 #define VALIDATOR_H
 
 #include "../Helpers/Input.h"
-
+#include "../Helpers/Algorithm.h"
 
 bool ValidatePassword(string &, const int);
 bool ValidateEmail(string &, string);
@@ -55,6 +55,7 @@ bool ValidatePassword(string &password, const int length) {
         for (int idx = 0; idx < SYMBOLS.length(); idx += 1)
             if (password[i] == SYMBOLS[idx]) isValid = true;
 
+
     return isValid;
 }
 
@@ -65,10 +66,13 @@ bool ValidateEmail(string &email, string match) {
     const int minEmailLen = 2;
     bool isValid = false;
 
+    // Blank Space Validator
+    for (int  i = 0 ; i < email.length() ; i += 1)
+        if (email[i] == ' ') return false;
+
     // Length Validator
     int len = email.length() - match.length();
     isValid = len >= minEmailLen;
-
 
     if (!isValid) return false;
     isValid = false;
