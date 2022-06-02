@@ -34,7 +34,7 @@ void PrintError (const char* message) { cout << "\n Error : " << message << " \n
 
 // @ Gets String Input
 string GetString (const char* message) {
-    cout << message;
+    cout << "\n >> "<< message;
     string str;
     cin.clear(); // ! clear previous buffer
     cin.sync(); // reset flags
@@ -45,13 +45,13 @@ string GetString (const char* message) {
 // @ Gets  input of Type <Any>
 template<class TYPE>
 TYPE GetInput (const char* message) {
-    cout << message;
+    cout  << "\n >> "<< message;
     TYPE auxiliary ;
     cin.clear(); // ! clear previous buffer
     cin.sync(); // reset flags
     cin >> auxiliary;
     if (!cin.fail()) return auxiliary;
-    PrintError("Invalid Input Expected : number");
+    PrintError("Invalid Input");
     GetInput<TYPE>(message);
     return auxiliary;
 }
@@ -63,6 +63,7 @@ TYPE GetValueUnder(TYPE value , const char* message , const char* err) {
     if (auxiliary < value) return value;
     PrintError(err);
     GetValueUnder<TYPE>(value , message , err);
+    return auxiliary;
 }
 
 // @ Returns new Value that must be greater then given value
@@ -71,6 +72,7 @@ template<class TYPE> TYPE GetValueUpper (TYPE value , const char* message , cons
     if (auxiliary > value) return value;
     PrintError(err);
     GetValueUpper<TYPE>(value , message , err);
+    return auxiliary;
 }
 
 // Returns => User Choice Y/N

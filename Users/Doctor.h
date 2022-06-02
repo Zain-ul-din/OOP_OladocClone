@@ -23,9 +23,10 @@ public:
     /* Constructor */
 
     Doctor();
-    Doctor(const string &name, const string &cnicNumber, const string &password, const string &email,
-    int experienceYears, const string &hospitalName, const string &city, const string &specializationArea,
-    int startingHour, int endingHours, double rates, double onLineRates);
+
+    Doctor(const string &name, const string &cnicNumber, const string &password, int experienceYears, float rating,
+           const string &email, const string &hospitalName, const string &city, const string &specializationArea,
+           int startingHour, int endingHours, double rates, double onLineRates);
 
     /* Getter Setter */
 
@@ -47,6 +48,8 @@ public:
     void setRates(double rates);
     double getOnLineRates() const;
     void setOnLineRates(double onLineRates);
+    float getRating() const;
+    void setRating(float rating);
 
     /* Overrides */
 
@@ -69,8 +72,10 @@ public:
 
    /* Helpers */
    void InputSpecializationArea ();
+   void InputAppointmentsTime();
 private:
-    int experienceYears;
+    int experienceYears ;
+    float rating;
     string  email, hospitalName   , city , specializationArea;
     int startingHour , endingHours ; // 24 hours clock format
     double rates , onLineRates; // appointment rates
@@ -95,14 +100,15 @@ Doctor::Doctor() {
     this->endingHours = 0;
     this->rates  = 0;
     this->onLineRates = 0;
+    this->rating = 0;
 }
 
-Doctor::Doctor(const string &name, const string &cnicNumber, const string &password, const string &email,
-        int experienceYears, const string &hospitalName, const string &city, const string &specializationArea,
-        int startingHour, int endingHours, double rates, double onLineRates) : User(name, cnicNumber, password),
-        email(email), experienceYears(experienceYears) , hospitalName(hospitalName), city(city) ,
-        specializationArea(specializationArea), startingHour(startingHour), endingHours(endingHours), rates(rates),
-        onLineRates(onLineRates) {}
+Doctor::Doctor(const string &name, const string &cnicNumber, const string &password, int experienceYears, float rating,
+               const string &email, const string &hospitalName, const string &city, const string &specializationArea,
+               int startingHour, int endingHours, double rates, double onLineRates) : User(name, cnicNumber, password),
+               experienceYears(experienceYears),rating(rating), email(email),hospitalName(hospitalName),
+               city(city), specializationArea(specializationArea), startingHour(startingHour), endingHours(endingHours), rates(rates),
+               onLineRates(onLineRates) {}
 
 /* Getter Setter */
 
@@ -124,6 +130,8 @@ double Doctor::getRates() const { return rates; }
 void Doctor::setRates(double rates) { this->rates = rates; }
 double Doctor::getOnLineRates() const { return onLineRates; }
 void Doctor::setOnLineRates(double onLineRates) { this->onLineRates = onLineRates;}
+float Doctor::getRating() const { return rating;}
+void Doctor::setRating(float rating) { this->rating = rating;}
 
 /* Operator OverLoading */
 
@@ -147,7 +155,8 @@ ofstream &operator << (ofstream & outFile , const Doctor& doctor ) {
              << doctor.startingHour << reserveSeparator
              << doctor.endingHours << reserveSeparator
              << doctor.rates << reserveSeparator
-             << doctor.onLineRates << "\n";
+             << doctor.onLineRates  << reserveSeparator
+             << doctor.rating << "\n";
     return outFile;
 }
 
@@ -155,18 +164,52 @@ ofstream &operator << (ofstream & outFile , const Doctor& doctor ) {
 
 void Doctor::Update() {
      cout << "\n -- Edit Menu \n";
-     cout << "  - Edit  specialization area      - 1\n";
-     cout << "  - Edit Location (city )          - 2\n";
-     cout << "  - Edit Hospital Name             - 3\n";
-     cout << "  - Edit appointment starting time - 4\n";
+     cout << "  - Edit  specialization area        - 1\n";
+     cout << "  - Edit location (city )            - 2\n";
+     cout << "  - Edit hospital Name               - 3\n";
+     cout << "  - Edit appointment starting timing - 4\n";
+     cout << "  - Edit in-person fee               - 5\n";
+     cout << "  - Edit online fee                  - 6\n";
+     cout << "  - Exit                             - 7\n";
+     int choice = GetInput<int>("Enter Choice : ");
+     switch (choice) {
+         case 1:
+             this->InputSpecializationArea();
+             break;
+         case 2:
+             this->city = GetInput<string>("Enter new city name _ ");
+             break;
+         case 3:
+             this->hospitalName = GetInput<string>("Enter new hospital name _ ");
+             break;
+         case 4:
+             this->InputAppointmentsTime();
+             break;
+         case 5:
+             this->rates = abs(GetInput<double>("Enter new in-person fee "));
+             break;
+         case 6: // Patient
+             this->onLineRates = abs(GetInput<double>("Enter new online fee "));
+             break;
+         default:
+             cout << " -- Never Mind \n";
+    }
 }
 
 void Doctor::InputSpecializationArea() {
     cout << "\n -- Select You're specialization area\n";
     for (int  i = 0 ; i < 4; i  += 1) cout << "  - " << SpecializationList[i] << " - " << i <<"\n";
-    int idx = GetInputInRange(0 , 3 , "\n >> Enter you're selection _  " , "Invalid Choice");
+    int idx = GetInputInRange(0 , 3 , "Enter you're selection _  " , "Invalid Choice");
     this->specializationArea = GetSpecializationByIdx(idx);
     cout << "\n You Select _ " << specializationArea << "\n";
+}
+
+void Doctor::InputAppointmentsTime() {
+    this->startingHour =  Clamp(GetValueUpper<int>(0 , "Enter appointments starting Time WRT => 24 Hour format _  "
+     , "Value must be greater then zero ") , 1 , 24);
+    this->endingHours = Clamp(GetValueUpper<int>( this->startingHour , "Enter appointments ending Time WRT => 24 Hour format _  " ,
+    "ending time must be greater then starting time") , 1 , 24 ) ;
+    cout << "\n\t" << this->startingHour  << " to " << this->endingHours << "\n";
 }
 
 /*

@@ -56,9 +56,9 @@ void Doctors::SignUp() {
 
 void Doctors::SignIn() {
      Doctor* doctor = new Doctor ();
-     string userName = GetString(" >> Enter User Name : ");
+     string userName = GetString("Enter User Name : ");
      if(!IsConatins(*doctor)) return;
-     string password = GetString(" >> Enter Password : ");
+     string password = GetString("Enter Password : ");
      // Password Check
      if (!CheckPassword(*doctor)) return;
      this->currentLoggedInDoctorIdx = GetIdxOf(*doctor);
@@ -111,8 +111,8 @@ void Doctors::Init() {
 
 bool Doctors::SignUp_Helper(Doctor **doctor) {
 
-    string email = GetEmail(" >> Enter Email Address : ")
-    , cnicNumber= GetCnic(" >> Enter Cnic Number : ");
+    string email = GetEmail("Enter Email Address : ")
+    , cnicNumber= GetCnic("Enter Cnic Number : ");
     (*doctor)->setEmail(email);
     (*doctor)->setCnicNumber(cnicNumber);
 
@@ -124,13 +124,13 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
 
     // sign Up Logic
     string password = GetPassword
-    (" >> Enter password ( Password must be 8 characters long and the use of a minimum of one special character , uppercase , lowercase , and the numeric digit is a must ) : ") ,   name;
+    ("Enter password ( Password must be 8 characters long and the use of a minimum of one special character , uppercase , lowercase , and the numeric digit is a must ) : ") ,   name;
     (*doctor)->setPassword(password);
 
     bool isNameAlreadyTaken = false;
     do {
-        name = GetString(" >> Enter user name _ ");
-        isNameAlreadyTaken = FindDoctorByUserName(name) == -1;
+        name = GetString("Enter user name _ ");
+        isNameAlreadyTaken = FindDoctorByUserName(name) != -1;
         if (isNameAlreadyTaken) cout << " Name Already Taken please use new name ";
     } while (isNameAlreadyTaken);
 
@@ -139,20 +139,17 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
 
     (*doctor)->InputSpecializationArea();
 
-    int experienceYears = Clamp(GetInput<int>(" >> How many years of experience you have _ ") , 0 , 100);
-    string hospitalName  = GetString(" >> Enter you're hospital name _ ")
-    , city = GetString(" >> Enter city name _ ");
-    int startingHour = Clamp(GetValueUpper<int>(0 , " >> Enter appointments starting Time WRT => 24 Hour format _  " , "Value must be greater then zero ") , 1 , 24)
-    , endingHours = Clamp(GetValueUnder<int>( startingHour , " >> Enter appointments ending Time WRT => 24 Hour format _  " , "ending time must be greater then starting time") , 1 , 24 ) ;
-    double rates  = GetInput<double>(" >> Enter in person appointment rate _ ")
-    , onLineRates = GetInput<double>(" >> Enter online appointment rate _ ");
+    int experienceYears = Clamp(GetInput<int>("How many years of experience you have _ ") , 0 , 100);
+    string hospitalName  = GetString("Enter you're hospital name _ ")
+    , city = GetString("Enter city name _ ");
+    (*doctor)->InputAppointmentsTime();
+    double rates  = abs(GetInput<double>("Enter in person appointment rate _ "))
+    , onLineRates = abs(GetInput<double>("Enter online appointment rate _ "));
 
     (*doctor)->setName(name);
     (*doctor)->setExperienceYears(experienceYears);
     (*doctor)->setCity(city);
     (*doctor)->setHospitalName(hospitalName);
-    (*doctor)->setStartingHour(startingHour);
-    (*doctor)->setEndingHours(endingHours);
     (*doctor)->setRates(rates);
     (*doctor)->setOnLineRates(onLineRates);
 
@@ -165,14 +162,14 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
 }
 
 bool Doctors::IsConatins(Doctor &doctor) {
-    for (int idx = 0 ; idx < MAX && this->doctors[idx] != NULL ; idx += 1 )
-        if (*(this->doctors[idx]) == doctor) return true;
+    for (int i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1 )
+        if (*(this->doctors[i]) == doctor) return true;
     return false;
 }
 
 bool Doctors::CheckPassword(Doctor &doctor) {
     for (int  i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1){
-        Doctor* _doctor = this->doctors[idx];
+        Doctor* _doctor = this->doctors[i];
         if( _doctor->getPassword() == doctor.getPassword() && doctor.getName() == _doctor->getName())
             return true;
     }
@@ -187,8 +184,8 @@ int Doctors::GetIdxOf(Doctor &doctor) {
 }
 
 int Doctors::FindDoctorByUserName(string &name) {
-    for (int  i = 0 ; i < MAX && this->doctors[idx] != NULL ; i += 1)
-        if (name == this->doctors[idx]->getName()) return idx;
+    for (int  i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1)
+           if (name == this->doctors[i]->getName()) return i;
     return -1;
 }
 

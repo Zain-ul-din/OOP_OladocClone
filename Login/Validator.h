@@ -138,7 +138,7 @@ string GetPassword(const char *message, bool reCheck = true) {
 
         if (!reCheck) return password;
 
-        reTypePassword = GetString(" >> Retype password : ");
+        reTypePassword = GetString("Retype password : ");
         isMatch = password == reTypePassword;
         if (!isMatch) PrintError("2nd password is not matching with 1st one please retype again");
     } while (!isMatch);

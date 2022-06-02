@@ -6,7 +6,7 @@
 #define USERS_H
 
 #include "../Users/Doctor.h"
-
+#include "../Users/Patient.h"
 
 class Users;
 
