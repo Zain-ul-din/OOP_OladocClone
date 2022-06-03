@@ -19,13 +19,10 @@ public:
 
     void SignUp() override;
     void SignIn() override;
-
     void Delete(string options = "") override;
-
+    void Update(string options = "") override;
     void LoadData() override;
     void SaveData() override;
-
-    void Update(string options = "") override;
 
     int currentLoggedInDoctorIdx;
     Doctor** doctors = NULL;
@@ -36,7 +33,7 @@ private:
     void Init ();
 
     bool SignUp_Helper (Doctor** doctor);  // returns => sign up succeed
-    bool IsConatins (Doctor& doctor); // returns => doctor exists in record
+    bool IsContains (Doctor& doctor); // returns => doctor exists in record
     bool CheckPassword (Doctor& doctor); // password checker
     int  GetIdxOf (Doctor& doctor); // returns => Idx of doctor in record
 
@@ -49,8 +46,12 @@ Doctors::Doctors() { this->Init(); }
 
 void Doctors::SignUp() {
      Doctor* doctor = new Doctor();
-     if (!SignUp_Helper(&doctor)) return; // input Handler
+     if (!SignUp_Helper(&doctor)) { // input Handler
+         delete doctor;
+         return;
+     }
      this->idx += 1;
+     this->currentLoggedInDoctorIdx = this->GetIdxOf(*doctor);
      this->doctors[idx] = doctor;
      this->SaveData();
 }
@@ -59,7 +60,7 @@ void Doctors::SignIn() {
      Doctor* doctor = new Doctor ();
      string userName = GetString("Enter User Name : ");
      doctor->setName(userName);
-         if(!IsConatins(*doctor))
+         if(!IsContains(*doctor))
      {
          PrintError("User don't exists please use sign up instead !");
          return;
@@ -73,20 +74,23 @@ void Doctors::SignIn() {
          PrintError("Wrong password Please type correct password !");
      }
 
-     if (attempts >= 3) PrintError("Some thing went wrong Login Fail");
+     if (attempts >= 3) PrintError("Some thing went wrong Login Failed");
 
      // Password Check
-     if (!CheckPassword(*doctor)) return;
+     if (!CheckPassword(*doctor)) {
+         delete doctor;
+         return;
+     }
      this->currentLoggedInDoctorIdx = GetIdxOf(*doctor);
+     delete doctor;
 }
-
 
 void Doctors::LoadData() {
     ifstream in;
     in.open(DOCTORS_FILEPATH , ios::in);
     if (in.fail() || IsEmptyFile(in)) {
-        this->SaveData();
         in.close();
+        this->SaveData();
         return;
     }
 
@@ -136,7 +140,7 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
     (*doctor)->setCnicNumber(cnicNumber);
 
     // Duplicate Check
-    if (this->IsConatins(**doctor)) {
+    if (this->IsContains(**doctor)) {
         PrintError("Account already exists please use signIn instead");
         return false;
     }
@@ -183,7 +187,7 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
     return true;
 }
 
-bool Doctors::IsConatins(Doctor &doctor) {
+bool Doctors::IsContains(Doctor &doctor) {
     for (int i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1 )
         if (*(this->doctors[i]) == doctor) return true;
     return false;
@@ -192,8 +196,7 @@ bool Doctors::IsConatins(Doctor &doctor) {
 bool Doctors::CheckPassword(Doctor &doctor) {
     for (int  i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1){
         Doctor* _doctor = this->doctors[i];
-        if( _doctor->getPassword() == doctor.getPassword() && doctor.getName() == _doctor->getName())
-            return true;
+        if( _doctor->getPassword() == doctor.getPassword() && doctor.getName() == _doctor->getName()) return true;
     }
 
     return false;
@@ -214,5 +217,7 @@ int Doctors::FindDoctorByUserName(string &name) {
 void Doctors::Update(string options) {
 
 }
+
+
 
 #endif //DOCTORS_H

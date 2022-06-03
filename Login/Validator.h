@@ -11,10 +11,15 @@
 bool ValidatePassword(string &, const int);
 bool ValidateEmail(string &, string);
 bool ValidateCnic(string &);
+bool ValidateContactNumber (string&);
+
+
 
 string GetPassword(const char *, bool);
 string GetEmail(const char *);
 string GetCnic(const char *);
+string GetContactNumber (const char*);
+
 
 
 /* Validates Password
@@ -123,6 +128,20 @@ bool ValidateCnic(string &cnic) {
     return isValid;
 }
 
+/* Validates Contact Number
+   @ Params : std::string & pass
+   @ Returns : Boolean */
+bool ValidateContactNumber(string &contactNumber) {
+    if (contactNumber.length() != 11) return false;
+
+    const string NUMBER = "0987654321";
+    bool isValid = true;
+    for (int  i = 0  ; i < contactNumber.length() ; i += 1)
+        for (int idx = 0 ; idx < NUMBER.length() ; i += 1)
+            if (contactNumber[i] != NUMBER[i]) isValid = false;
+    return isValid;
+}
+
 /* Returns Valid Password
 @ Params : const char* message
 @ Returns : string */
@@ -137,13 +156,13 @@ string GetPassword(const char *message, bool reCheck = true) {
         {
             password = GetString(message);
             isValid = ValidatePassword(password, 8);
-            if (!isValid) PrintError("Invalid Password");
+            if (!isValid) PrintError("Invalid Password \n");
         }
             while (!isValid);
 
         if (!reCheck) return password;
 
-        reTypePassword = GetString("Retype password : ");
+        reTypePassword = GetString("Retype password : \n");
         isMatch = password == reTypePassword;
         if (!isMatch) PrintError("2nd password is not matching with 1st one please retype again");
     }
@@ -168,6 +187,8 @@ string GetEmail(const char *message) {
     return email;
 }
 
+
+
 /* Returns Valid Password
    @ Params : const char* message
    @ Returns : string */
@@ -182,6 +203,22 @@ string GetCnic(const char *message) {
     }
         while (!isValid);
     return cnic;
+}
+
+/* Returns Valid Contact Number
+@ Params : const char* message
+@ Returns : string */
+string GetContactNumber(const char * message) {
+        string contactNumber ;
+        bool isValid ;
+        do
+    {
+        contactNumber = GetString(message);
+        isValid = ValidateContactNumber(contactNumber);
+        if (!isValid) PrintError("Invalid Contact Number ! \n");
+    }
+        while (!isValid);
+        return contactNumber;
 }
 
 

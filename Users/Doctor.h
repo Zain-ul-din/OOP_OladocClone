@@ -160,7 +160,9 @@ void Doctor::setAvailableDays(const string &availableDays) { this->availableDays
 /* Operator OverLoading */
 
 bool Doctor::operator==(const Doctor &rhs) const {
-    return this->email == rhs.email || this->cnicNumber == rhs.email || this->name == rhs.name;
+    return this->email == rhs.email ||
+    this->cnicNumber == rhs.cnicNumber ||
+    this->name == rhs.name;
 }
 
 bool Doctor::operator!=(const Doctor &rhs) const { return !(rhs == *this); }

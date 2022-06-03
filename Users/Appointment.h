@@ -17,7 +17,7 @@ private:
     Time appointmentTime;
     string appointmentType;
     string appointmentStatus;
-
+    string feedBack;
     static string appointmentsStatus[3];
 };
 
