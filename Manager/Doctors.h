@@ -32,7 +32,8 @@ public:
     bool Search (string& match, string options) const; // Search functionality for (Specialty, Area, and Hospitals)
     bool Search (string& match1 , string& match2 , string options) const; // ..
     bool Search (string& specialty , string& area , string& hospital , bool matchAll = true) const; // ..
-    bool Search (int idx);
+    bool Search (int idx) const; // Search By idx
+    Doctor* Search (string cnicNumber , int flag) ; // Search by Cnic Number
 
     int currentLoggedInDoctorIdx;
     Doctor** doctors = NULL;
@@ -207,10 +208,7 @@ bool Doctors::CheckPassword(Doctor &doctor) {
     return false;
 }
 
-
-void Doctors::Update(string options) {
-
-}
+void Doctors::Update(string options) {}
 
 /* Search Functionality */
 // string specialty, string hospital, string area
@@ -314,11 +312,18 @@ bool Doctors::Search(Doctor *doctor) const {
     return false;
 }
 
-bool Doctors::Search(int idx) {
+bool Doctors::Search(int idx) const {
      for (int i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1)
          if (idx == i) return true;
      return false;
 }
+
+Doctor *Doctors::Search(string cnicNumber , int flag) {
+    for (int i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1)
+        if (this->doctors[i]->getCnicNumber() == cnicNumber) return this->doctors[i];
+    return NULL;
+}
+
 
 void Doctors::DisplayRow(int idx, Doctor& doctor) {
     SetOffSet(idx, 9 , '|' );
@@ -342,8 +347,5 @@ void Doctors::DisplayRow() {
     SetOffSet("Available Today" , 12 , ' ');
     cout << "\n";
 }
-
-
-
 
 #endif //DOCTORS_H

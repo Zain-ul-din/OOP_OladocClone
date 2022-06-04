@@ -42,7 +42,7 @@ int main () {
 //    } else std::cout << "False";
 
    // OlaDoc olaDoc;
-    OldaDoc_Manager manager;
+    OlaDoc_Manager manager;
     manager.Show_DoctorPanel();
 
     return 0;

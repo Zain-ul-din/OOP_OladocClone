@@ -25,6 +25,8 @@ string
 -
 iomanip
 -
+../FileManager/SaveSystem.h
+D:/C++/PaidProject/FileManager/SaveSystem.h
 
 D:/C++/PaidProject/Helpers/Time.h
 ctime
@@ -46,7 +48,7 @@ D:/C++/PaidProject/Manager/Doctors.h
 ./Users.h
 D:/C++/PaidProject/Manager/Users.h
 
-D:/C++/PaidProject/Manager/OldaDoc_Manager.h
+D:/C++/PaidProject/Manager/OlaDoc_Manager.h
 ./Doctors.h
 D:/C++/PaidProject/Manager/Doctors.h
 ./Patients.h
@@ -59,16 +61,18 @@ D:/C++/PaidProject/Manager/Patients.h
 D:/C++/PaidProject/Manager/Users.h
 
 D:/C++/PaidProject/Manager/Users.h
+../Users/Doctor.h
+D:/C++/PaidProject/Users/Doctor.h
+../Users/Patient.h
+D:/C++/PaidProject/Users/Patient.h
 ../Users/Appointment.h
 D:/C++/PaidProject/Users/Appointment.h
 
 D:/C++/PaidProject/OlaDoc.h
-./Manager/OldaDoc_Manager.h
-D:/C++/PaidProject/Manager/OldaDoc_Manager.h
+./Manager/OlaDoc_Manager.h
+D:/C++/PaidProject/Manager/OlaDoc_Manager.h
 
 D:/C++/PaidProject/Users/Appointment.h
-./User.h
-D:/C++/PaidProject/Users/User.h
 ./Doctor.h
 D:/C++/PaidProject/Users/Doctor.h
 ./Patient.h
@@ -77,8 +81,6 @@ D:/C++/PaidProject/Users/Patient.h
 D:/C++/PaidProject/Users/Doctor.h
 ./User.h
 D:/C++/PaidProject/Users/User.h
-./Appointment.h
-D:/C++/PaidProject/Users/Appointment.h
 
 D:/C++/PaidProject/Users/Patient.h
 ./User.h

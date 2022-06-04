@@ -7,7 +7,7 @@
 
 
 #include "./Doctor.h"
-
+#include "./Patient.h"
 
 class Appointment {
 public:
@@ -40,9 +40,9 @@ public:
     void Update (string options);
 
     friend ofstream & operator << (ofstream&, Appointment&);
-    static Appointment* StrToObj (string&);
 
-    static Appointment* MakeAppointment ( User& doctor, User& patient );
+    static Appointment* StrToObj (string&);
+    static Appointment* MakeAppointment ( Doctor& doctor, Patient& patient );
 
 private:
     string doctorCnic , patientCnic;
@@ -90,6 +90,7 @@ Appointment *Appointment::StrToObj(string& str) {
     appointment->isSeen = aux[6] == "1";
     appointment->feedBack = Replace(aux[7] , '_' , ' ');
     appointment->rating = stof(aux[8]);
+    return appointment;
 }
 
 string Appointment::appointmentsStatus[3] = { "approved" , "pending" "reject" };
@@ -171,7 +172,7 @@ string Appointment::Input(const string options) {
     }
         else
     {
-        cout << " -- Select Appointment Types \n";
+        cout << " -- Select Appointment Type \n";
         for (int i = 0 ; i < 2 ; i += 1)
             cout << "  - " << appointmentTypes[i] << " - " << i << "\n";
         int idx = GetInputInRange(0 , 1 , "Enter Choice : " , "Invalid Choice");
@@ -179,10 +180,28 @@ string Appointment::Input(const string options) {
     }
 }
 
-Appointment *Appointment::MakeAppointment(User &doctor, User &patient) {
-    Appointment* appointment = new Appointment();
-    Doctor doctor;
-    
+Appointment *Appointment::MakeAppointment(Doctor &doctor, Patient &patient) {
+     cout << "\n\n";
+     Appointment* appointment = new Appointment();
+     appointment->doctorCnic = doctor.getCnicNumber();
+     appointment->patientCnic = patient.getCnicNumber();
+     appointment->appointmentType = appointment->Input("appointmentType");
+     appointment->appointmentCost = appointment->appointmentType == "in-person" ? doctor.getRates() : doctor.getOnLineRates();
+
+     Time timeNow , inputTime;
+         do
+     {
+         cin >> inputTime;
+         if (inputTime > timeNow) PrintError("Time must be greater then time now !");
+     }
+         while (inputTime > timeNow);
+
+     if(GetChoice(" -- Set time to now for testing __ OlaDoc Developers Y/N : "))
+         appointment->appointmentTime = timeNow;
+     else appointment->appointmentTime = inputTime;
+     appointment->appointmentType = "pending";
+     cout << "You're Appointment is pending wait for doctor reply \n";
+     return appointment;
 }
 
 

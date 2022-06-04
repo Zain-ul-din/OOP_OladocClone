@@ -7,8 +7,6 @@
 
 #include "./User.h"
 
-#include "./Appointment.h"
-
 class Doctor : public User {
 public:
     /* Constructor */
@@ -172,7 +170,7 @@ ostream &operator << (ostream &os, const Doctor &doctor) {
     OffSet; cout << "Appointment Timing  : " << doctor.startingHour << " to " << doctor.endingHours << " PKT \n";
     OffSet; cout << "Availability Days  :- \n";
     for (int i = 0 ; i < doctor.availableDays.length() ; i += 1)
-    { OffSet;  cout << "-" << Time::fullDaysName[stoi(to_string(doctor.availableDays[i]))] << "\n"; }
+    { OffSet;  cout << "-" << Time::fullDaysName[CharToInt(doctor.availableDays[i])] << "\n"; }
 #undef OffSet
 
     return os;
@@ -382,7 +380,7 @@ string Doctor::GetSpecializationAreaInput() {
 bool Doctor::IsAvailableToday() {
     Time timeNow;
     for (int i = 0 ; i < this->availableDays.length() ; i += 1)
-        if (Time::daysName[stoi(to_string(this->availableDays[i]))] == timeNow.getDayName()) return true;
+        if (Time::daysName[CharToInt(this->availableDays[i])] == timeNow.getDayName()) return true;
     return false;
 }
 

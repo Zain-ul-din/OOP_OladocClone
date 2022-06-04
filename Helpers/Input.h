@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include "../FileManager/SaveSystem.h"
 
 using namespace std;
 

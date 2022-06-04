@@ -42,26 +42,46 @@ public:
 
     bool operator==(const Time &rhs) const;
     bool operator!=(const Time &rhs) const;
+    bool operator<(const Time &rhs) const;
+    bool operator>(const Time &rhs) const;
+    bool operator<=(const Time &rhs) const;
+    bool operator>=(const Time &rhs) const;
 
-    friend ostream &operator  << (ostream &os, const Time &time);
-    friend ofstream &operator << (ofstream& outFile , const Time& time);
+    friend ostream &operator<<(ostream &os, const Time &time) {
+        os << "\n Time PKT M/D/Y : " <<  time.month << " / " << time.day << " / " << time.year << " " << time.hour << ":" << time.min << ":" << "00\n" ;
+        return os;
+    }
+
+    friend ofstream &operator << (ofstream& outFile , const Time& time) {
+        outFile << Replace(time.timeStr);
+        return outFile;
+    }
+
+    friend istream & operator >> (istream& in , Time& time){
+        time.month = GetInputInRange(1 , 12 , " Enter Month : " , "Invalid Month !");
+        time.day = GetInputInRange(1 , time.month % 2 == 0 ? 30 : 31 , "Enter Date : " , "Invalid Date !");
+        time.hour = GetInputInRange(1 , 24 , "Enter Hour w.r.t 24 : " , "Invalid Hour");
+        time.min = GetInputInRange(1 , 60 , "Enter Min : " , "Invalid Min");
+        time.monthName = monthsName[time.month - 1];
+        time.setTimeStr();
+        return in;
+    }
 
     static string daysName[7]; // to make comparison with std c++ time
     static string fullDaysName [7];
-
 private:
 
     string timeStr;
     int year , month , day , hour , min;
     string monthName  , dayName;
 
-      void DateInit ();
-      static const string  monthsName[12];
-      static int GetIdxOfMonth (string&);
+    void DateInit ();
+    static const string  monthsName[12];
+    static int GetIdxOfMonth (string&);
 };
 
 string Time::daysName[7] = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
-string Time::fullDaysName[7] = {"Monday" , "Tuesday" , "Thursday" , "Friday" , "Saturday" , "Sunday"};
+string Time::fullDaysName[7] = {"Monday" , "Tuesday" , "Wednesday", "Thursday" , "Friday" , "Saturday" , "Sunday"};
 
 /* Constructor */
 
@@ -87,20 +107,6 @@ void Time::setDayName(const string &dayName) { this->dayName = dayName; this->se
 string Time::getMonthName() const { return monthName;}
 void Time::setMonthName(const string &monthName) { this->monthName = monthName; this->setTimeStr();}
 string Time::getTimeStr() const { return timeStr;}
-
-ostream &operator<<(ostream &os, const Time &time) {
-    os << "timeStr: " << time.timeStr << " year: " << time.year << " month: " << time.month << " day: " << time.day
-    << " hour: " << time.hour << " min: " << time.min << " monthName: " << time.monthName << " dayName: "
-    << time.dayName;
-    return os;
-}
-
-/* Operator Over Loading */
-
-ofstream &operator << (ofstream& outFile , const Time& time) {
-    outFile << Replace(time.timeStr);
-    return outFile;
-}
 
 const string Time::monthsName[12] =
         {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -171,6 +177,21 @@ Time Time::ParseDate(string& timeStr) {
 }
 
 
+bool Time::operator<(const Time &rhs) const {
+    if (year < rhs.year) return true;
+    if (rhs.year < year) return false;
+    if (month < rhs.month) return true;
+    if (rhs.month < month) return false;
+    if (day < rhs.day) return true;
+    if (rhs.day < day) return false;
+    if (hour < rhs.hour) return true;
+    if (rhs.hour < hour) return false;
+    return min < rhs.min;
+}
+
+bool Time::operator>(const Time &rhs) const { return rhs < *this;}
+bool Time::operator<=(const Time &rhs) const { return !(rhs < *this);}
+bool Time::operator>=(const Time &rhs) const { return !(*this < rhs);}
 
 
 #endif //Time_H

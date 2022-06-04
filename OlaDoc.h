@@ -5,7 +5,7 @@
 #ifndef OLADOC_H
 #define OLADOC_H
 
-#include "./Manager/OldaDoc_Manager.h"
+#include "./Manager/OlaDoc_Manager.h"
 
 #define MAX 100000
 

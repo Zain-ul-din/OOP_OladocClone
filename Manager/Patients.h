@@ -31,7 +31,7 @@ public:
 
     bool Search (Patient* patient); // returns => patient exists in record
     int  Search (Patient& patient); // returns => Idx of patient in record
-
+    Patient* Search (string cnicNumber);
 private:
     static const string PATIENTS_FILEPATH;
     void Init ();
@@ -197,6 +197,12 @@ int Patients::Search(Patient &patient) {
     for (int  i = 0 ; i < MAX && this->patients[i] != NULL ; i += 1)
         if (*(this->patients[i]) == patient) return i;
     return -1;
+}
+
+Patient *Patients::Search(string cnicNumber) {
+    for (int i = 0 ; i < MAX && this->patients[i] != NULL ; i += 1)
+        if (this->patients[i]->getCnicNumber() == cnicNumber) return this->patients[i];
+    return nullptr;
 }
 
 #endif //PAIDPROJECT_PATIENTS_H

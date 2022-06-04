@@ -18,6 +18,11 @@ bool IsContainsChar (string& , char);
 template<class  TYPE> bool IsInRange (TYPE , TYPE ,TYPE);
 void RemoveChar (string& , char);
 
+int CharToInt (char _char);
+
+// Returns=> Char to int
+int CharToInt(char _char) { return int(_char) - 48;}
+
 // Returns => String Replace old char with new
 string Replace (string str , const char _old = ' ', const char _new  = '_') {
     string auxiliary;
