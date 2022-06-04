@@ -7,12 +7,17 @@
 
 #include <iostream>
 #include <string>
+#include <iomanip>
 
 using namespace std;
 
 void PrintError (const char*);
 string GetString (const char*);
 bool GetChoice (const char*);
+void PrintChar (const char , int);
+
+void SetOffSet (int);
+template<class TYPE> void SetOffSet (TYPE val , int width , const char separator);
 
 template<class TYPE> TYPE GetInput (const char*);
 template<class TYPE> TYPE GetValueUnder (TYPE  , const char* , const char* );
@@ -93,6 +98,22 @@ bool GetChoice(const char *message) {
     char aux;
     cin >> aux;
     return aux == 'Y' || aux == 'y';
+}
+
+// Offset
+void SetOffSet (int offset) {
+    if (offset < 1) return;
+    for (int i  = 0 ; i < offset ; i += 1) cout << "\t";
+}
+
+// Sets Width
+template<class TYPE> void SetOffSet (TYPE val , int width , const char separator) { cout << " "<< setw(width) << val << "  " << separator << " "; }
+
+// Prints Char
+void PrintChar (const char _char ,int len) {
+   cout << "\n\n";
+   for (int  i = 0 ; i < len ; i += 1) cout << _char;
+   cout << "\n\n";
 }
 
 #endif //INPUT_H

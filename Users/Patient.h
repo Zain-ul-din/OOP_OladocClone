@@ -31,6 +31,7 @@ public:
 
     /* Methods */
     void ReChargeBalance ();
+    void Display ();
 
     static Patient* StrToObj (string&);
 
@@ -78,18 +79,22 @@ void Patient::Update() {
       cout << "\n -- Update Menu \n";
       cout << "  - Edit Contact Number - 1 \n";
       cout << "  - Edit age            - 2 \n";
-      cout << "  - Reset Password      - 3 \n";
-      cout << "  - Exit                - 4 \n";
+      cout << "  - Edit Name           - 3 \n";
+      cout << "  - Reset Password      - 4 \n";
+      cout << "  - Exit                - 5 \n";
       int choice = GetInput<int>(" Enter Choice _ ");
       switch (choice)
     {
         case 1:
-            this->contactNumber = GetInput<int>(" Enter new Contact Number : ");
+            this->contactNumber = GetContactNumber(" Enter new Contact Number : ");
             break;
         case 2:
             this->age = GetInput<int>("Enter correct age : ");
             break;
         case 3:
+            this->name = GetString("Enter new Name : ");
+            break;
+        case 4:
             this->password = GetPassword("Enter new Password");
             break;
         default:
@@ -102,7 +107,12 @@ void Patient::ReChargeBalance() { }
 
 /* Operator OverLoading */
 ostream &operator<<(ostream &os, const Patient &patient) {
-
+    PrintChar('-' , 100);
+#define OffSet SetOffSet(2)
+    OffSet; os << "Name           : " << patient.name << "\n";
+    OffSet; os << "Age            : " << patient.age << "\n";
+    OffSet; os << "Contact Number :  " << patient.contactNumber << "\n";
+#undef OffSet
     return os;
 }
 
@@ -122,7 +132,7 @@ ofstream &operator << (ofstream &outFile , const Patient& patient) {
 Patient *Patient::StrToObj(string &str) {
     string aux [7];
     int idx  = 0 ;
-    for (int i = 0 ; i < 6 ; i += 1)
+    for (int i = 0 ; i < str.length() ; i += 1)
         if (str[i] == reserveSeparator) idx += 1;
         else aux[idx].push_back(str[i]);
 
@@ -135,6 +145,15 @@ Patient *Patient::StrToObj(string &str) {
     patient->contactNumber = aux[5];
     patient->setEmail(aux[6]);
     return patient;
+}
+
+void Patient::Display() {
+     cout << *this;
+     SetOffSet(2); cout << "Cnic Number    : " << this->cnicNumber << "\n";
+     SetOffSet(2); cout << "Email Address  : " << this->email << "\n";
+     SetOffSet(2); cout << "Password       : " << this->password << "\n";
+     SetOffSet(2); cout << "Balance        : " << this->balance << "\n";
+     PrintChar('-' , 100);
 }
 
 #endif //PATIENT_H

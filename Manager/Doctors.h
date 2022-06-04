@@ -24,20 +24,28 @@ public:
     void LoadData() override;
     void SaveData() override;
 
+    /* Methods */
+
+    int Search (Doctor& doctor) const; // returns => Idx of doctor in record
+    int Search (string& doctorName) const; // returns => idx of element where name == doctorName
+    bool Search (Doctor* doctor) const; // returns => doctor exists in record
+    bool Search (string& match, string options) const; // Search functionality for (Specialty, Area, and Hospitals)
+    bool Search (string& match1 , string& match2 , string options) const; // ..
+    bool Search (string& specialty , string& area , string& hospital , bool matchAll = true) const; // ..
+    bool Search (int idx);
+
     int currentLoggedInDoctorIdx;
     Doctor** doctors = NULL;
-
 private:
     static const string DOCTORS_FILEPATH;
+
     // Helpers
+    static void DisplayRow(int idx , Doctor& doctor); // display column of doctors
+    static void DisplayRow (); // Displays top header
+
     void Init ();
-
     bool SignUp_Helper (Doctor** doctor);  // returns => sign up succeed
-    bool IsContains (Doctor& doctor); // returns => doctor exists in record
     bool CheckPassword (Doctor& doctor); // password checker
-    int  GetIdxOf (Doctor& doctor); // returns => Idx of doctor in record
-
-    int FindDoctorByUserName (string& name); // returns => doctor name in record
 };
 
 const string Doctors::DOCTORS_FILEPATH = "DOCTORS_DATA.text";
@@ -51,7 +59,7 @@ void Doctors::SignUp() {
          return;
      }
      this->idx += 1;
-     this->currentLoggedInDoctorIdx = this->GetIdxOf(*doctor);
+     this->currentLoggedInDoctorIdx = this->Search(*doctor);
      this->doctors[idx] = doctor;
      this->SaveData();
 }
@@ -60,7 +68,7 @@ void Doctors::SignIn() {
      Doctor* doctor = new Doctor ();
      string userName = GetString("Enter User Name : ");
      doctor->setName(userName);
-         if(!IsContains(*doctor))
+         if(!Search(&(*doctor)))
      {
          PrintError("User don't exists please use sign up instead !");
          return;
@@ -81,7 +89,7 @@ void Doctors::SignIn() {
          delete doctor;
          return;
      }
-     this->currentLoggedInDoctorIdx = GetIdxOf(*doctor);
+     this->currentLoggedInDoctorIdx = Search(*doctor);
      delete doctor;
 }
 
@@ -111,8 +119,7 @@ void Doctors::SaveData() {
         return ;
     }
 
-    for (int  i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1)
-        out << *(this->doctors[i]);
+    for (int  i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1) out << *(this->doctors[i]);
     out.close();
 }
 
@@ -140,7 +147,7 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
     (*doctor)->setCnicNumber(cnicNumber);
 
     // Duplicate Check
-    if (this->IsContains(**doctor)) {
+    if (this->Search(&(**doctor))) {
         PrintError("Account already exists please use signIn instead");
         return false;
     }
@@ -154,7 +161,7 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
         do
     {
         name = GetString("Enter user name _ ");
-        isNameAlreadyTaken = FindDoctorByUserName(name) != -1;
+        isNameAlreadyTaken = Search(name) != -1;
         if (isNameAlreadyTaken) PrintError("Name Already Taken please use new name ");
     }
         while (isNameAlreadyTaken);
@@ -169,6 +176,9 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
     string hospitalName  = GetString("Enter you're hospital name _ ")
     , city = GetString("Enter city name _ ");
     (*doctor)->InputAppointmentsTime();
+    string accountNumber = GetAccountNumber("Enter you're account Number : " , 11);
+    (*doctor)->setAccountNumber(accountNumber);
+    cout << " -- Revenue will be send after appointment \n";
     double rates  = abs(GetInput<double>("Enter in person appointment rate _ "))
     , onLineRates = abs(GetInput<double>("Enter online appointment rate _ "));
 
@@ -187,11 +197,6 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
     return true;
 }
 
-bool Doctors::IsContains(Doctor &doctor) {
-    for (int i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1 )
-        if (*(this->doctors[i]) == doctor) return true;
-    return false;
-}
 
 bool Doctors::CheckPassword(Doctor &doctor) {
     for (int  i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1){
@@ -202,21 +207,142 @@ bool Doctors::CheckPassword(Doctor &doctor) {
     return false;
 }
 
-int Doctors::GetIdxOf(Doctor &doctor) {
+
+void Doctors::Update(string options) {
+
+}
+
+/* Search Functionality */
+// string specialty, string hospital, string area
+bool Doctors::Search(string& match, string options) const {
+    this->DisplayRow();
+    bool isFound = false;
+    if (options == "Specialty") {
+        for (int i = 0; i < MAX && this->doctors[i] != NULL; i += 1)
+            if (match == this->doctors[i]->getSpecializationArea()) {
+                DisplayRow(i, *(this->doctors[i]));
+                isFound = true;
+            }
+    }
+    else if (options == "Area") {
+        for (int i = 0; i < MAX && this->doctors[i] != NULL; i += 1)
+            if (match == this->doctors[i]->getCity()) {
+                DisplayRow(i, *(this->doctors[i]));
+                isFound = true;
+            }
+    }
+    else
+        for (int i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1)
+            if (match == this->doctors[i]->getHospitalName()){
+                DisplayRow(i , *(this->doctors[i]));
+                isFound = true;
+            }
+    return isFound;
+}
+
+// Search functionality (Specialty, Area, and Hospitals)
+bool Doctors::Search(string& match1, string& match2, string options) const {
+    this->DisplayRow();
+    bool isFound = false;
+        if(options == "Specialty+Area")
+    {
+        for (int i = 0; i < MAX && this->doctors[i] != NULL; i += 1)
+            if (this->doctors[i]->getSpecializationArea() == match1 && this->doctors[i]->getCity() == match2){
+                DisplayRow(i , *(this->doctors[i]));
+                isFound = true;
+            }
+    }
+        else if (options == "Area+Hospital")
+    {
+        for (int i = 0; i < MAX && this->doctors[i] != NULL; i += 1)
+            if (this->doctors[i]->getCity() == match1 && this->doctors[i]->getHospitalName() == match2){
+                DisplayRow(i , *(this->doctors[i]));
+                isFound = true;
+            }
+    }
+        else
+    {
+        for (int i = 0; i < MAX && this->doctors[i] != NULL; i += 1)
+            if (this->doctors[i]->getSpecializationArea() == match1 && this->doctors[i]->getHospitalName() == match2){
+                DisplayRow(i , *(this->doctors[i]));
+                isFound = true;
+            }
+    }
+     return isFound;
+}
+
+bool Doctors::Search(string& specialty, string& area, string& hospital, bool matchAll) const {
+    this->DisplayRow();
+    bool isFound = false;
+
+          if (matchAll)
+      {
+          for (int i = 0; i < MAX && this->doctors[i] != NULL; i += 1)
+              if (   this->doctors[i]->getSpecializationArea() == specialty
+                  && this->doctors[i]->getCity() == area
+                  && this->doctors[i]->getHospitalName() == hospital){
+                  DisplayRow(i , *(this->doctors[i]));
+                  isFound = true;
+              }
+      }
+          else
+          for (int i = 0; i < MAX && this->doctors[i] != NULL; i += 1)
+              if (   this->doctors[i]->getSpecializationArea() == specialty
+                     || this->doctors[i]->getCity() == area
+                     || this->doctors[i]->getHospitalName() == hospital){
+                  DisplayRow(i , *(this->doctors[i]));
+                  isFound = true;
+              }
+      return isFound;
+}
+
+int Doctors::Search(string &doctorName) const{
+    for (int  i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1)
+        if (doctorName == this->doctors[i]->getName()) return i;
+    return -1;
+}
+
+int Doctors::Search(Doctor &doctor) const {
     for (int  i = 0 ; i < MAX && this->doctors[i] != NULL ; i ++)
         if (doctor == *(this->doctors[i])) return i;
     return -1;
 }
 
-int Doctors::FindDoctorByUserName(string &name) {
-    for (int  i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1)
-           if (name == this->doctors[i]->getName()) return i;
-    return -1;
+bool Doctors::Search(Doctor *doctor) const {
+    for (int i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1 )
+        if (*(this->doctors[i]) == *doctor) return true;
+    return false;
 }
 
-void Doctors::Update(string options) {
-
+bool Doctors::Search(int idx) {
+     for (int i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1)
+         if (idx == i) return true;
+     return false;
 }
+
+void Doctors::DisplayRow(int idx, Doctor& doctor) {
+    SetOffSet(idx, 9 , '|' );
+    SetOffSet(doctor.getName() , 15 , '|');
+    SetOffSet(doctor.getRating() , 6 , '|');
+    SetOffSet(doctor.getSpecializationArea() , 13 , '|');
+    SetOffSet(doctor.getHospitalName() , 12 , '|');
+    SetOffSet(doctor.getCity() , 12 , '|');
+    SetOffSet(doctor.IsAvailableToday() ? "YES" : "NO" , 10 , ' ');
+    cout << "\n";
+}
+
+void Doctors::DisplayRow() {
+    cout << "\n\n";
+    SetOffSet("Serial No", 9 , '|' );
+    SetOffSet("Doctor Name" , 15 , '|');
+    SetOffSet("Rating" , 6 , '|');
+    SetOffSet("Specialty" , 13 , '|');
+    SetOffSet("Hospital" , 12 , '|');
+    SetOffSet("Area" , 12 , '|');
+    SetOffSet("Available Today" , 12 , ' ');
+    cout << "\n";
+}
+
 
 
 

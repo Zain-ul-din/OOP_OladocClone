@@ -5,17 +5,9 @@
 #ifndef DOCTOR_H
 #define DOCTOR_H
 
-
 #include "./User.h"
 
-
-enum class Specialization {
-    Gynecologist,
-    Dermatologist,
-    Oncologist,
-    Orthopedic
-};
-
+#include "./Appointment.h"
 
 class Doctor : public User {
 public:
@@ -25,7 +17,7 @@ public:
 
     Doctor(const string &name, const string &cnicNumber, const string &password, int experienceYears, float rating,
            const string &email, const string &hospitalName, const string &city, const string &specializationArea,
-           int startingHour, int endingHours, double rates, double onLineRates, string &availableDays);
+           int startingHour, int endingHours, double rates, double onLineRates, string &availableDays , string& accountNumber);
 
     /* Getter Setter */
 
@@ -51,6 +43,12 @@ public:
     void setRating(float rating);
     string getAvailableDays() const;
     void setAvailableDays(const string &availableDays);
+    string getAccountNumber() const;
+    void setAccountNumber(const string &accountNumber);
+
+    /* Methods   */
+
+    void Display ();
 
     /* Overrides */
 
@@ -71,10 +69,14 @@ public:
     static const string SpecializationList[4];
     static string GetSpecializationByIdx(int);
     static Doctor* StrToObj (string&);
-    /* Helpers */
+    static string GetSpecializationAreaInput ();
+
+    /* Helpers Methods */
+
     void InputSpecializationArea();
     void InputAppointmentsTime();
     void InputAvailableDays(bool canEdit);
+    bool IsAvailableToday ();
 
 private:
     int experienceYears;
@@ -83,6 +85,8 @@ private:
     int startingHour, endingHours; // 24 hours clock format
     double rates, onLineRates; // appointment rates
     string availableDays;
+    string accountNumber;
+
 };
 
 const string Doctor::SpecializationList[4] = {"Gynecologist", "Dermatologist", "Oncologist", "Orthopedic"};
@@ -106,31 +110,15 @@ Doctor::Doctor() {
     this->onLineRates = 0;
     this->rating = 0;
     this->availableDays = "";
+    this->accountNumber = "undefined";
 }
 
 Doctor::Doctor(const string &name, const string &cnicNumber, const string &password, int experienceYears, float rating,
                const string &email, const string &hospitalName, const string &city, const string &specializationArea,
-               int startingHour, int endingHours, double rates, double onLineRates, string &availableDays) : User(name,
-                                                                                                                  cnicNumber,
-                                                                                                                  password),
-                                                                                                             experienceYears(
-                                                                                                                     experienceYears),
-                                                                                                             rating(rating),
-                                                                                                             email(email),
-                                                                                                             hospitalName(
-                                                                                                                     hospitalName),
-                                                                                                             city(city),
-                                                                                                             specializationArea(
-                                                                                                                     specializationArea),
-                                                                                                             startingHour(
-                                                                                                                     startingHour),
-                                                                                                             endingHours(
-                                                                                                                     endingHours),
-                                                                                                             rates(rates),
-                                                                                                             onLineRates(
-                                                                                                                     onLineRates),
-                                                                                                             availableDays(
-                                                                                                                     availableDays) {}
+               int startingHour, int endingHours, double rates, double onLineRates, string &availableDays , string& accountNumber) : User(name,
+               cnicNumber,password),experienceYears(experienceYears),rating(rating),email(email),hospitalName(
+               hospitalName),city(city),specializationArea(specializationArea),startingHour(startingHour),endingHours(
+               endingHours),rates(rates),onLineRates(onLineRates),availableDays(availableDays) ,accountNumber(accountNumber) {}
 
 /* Getter Setter */
 
@@ -156,6 +144,8 @@ float Doctor::getRating() const { return rating; }
 void Doctor::setRating(float rating) { this->rating = rating; }
 string Doctor::getAvailableDays() const { return this->availableDays; }
 void Doctor::setAvailableDays(const string &availableDays) { this->availableDays = availableDays; }
+string Doctor::getAccountNumber() const { return accountNumber;}
+void Doctor::setAccountNumber(const string &accountNumber) { this->accountNumber = accountNumber;}
 
 /* Operator OverLoading */
 
@@ -167,7 +157,26 @@ bool Doctor::operator==(const Doctor &rhs) const {
 
 bool Doctor::operator!=(const Doctor &rhs) const { return !(rhs == *this); }
 
-ostream &operator << (ostream &os, const Doctor &doctor) { return os; }
+ostream &operator << (ostream &os, const Doctor &doctor) {
+#define OffSet SetOffSet(2)
+    PrintChar('-' , 100);
+    OffSet; cout << "Name                : " << doctor.name << "\n";
+    OffSet; cout << "Email Address       : " << doctor.email << "\n";
+    OffSet; cout << "Experience          : " << doctor.experienceYears << " years " << "\n";
+    OffSet; cout << "Hospital Name       : " << doctor.hospitalName << "\n";
+    OffSet; cout << "City                : " << doctor.city << "\n";
+    OffSet; cout << "Specialization Area : " << doctor.specializationArea << "\n";
+    OffSet; cout << "In-Person Fee       : " << doctor.rates << "\n";
+    OffSet; cout << "Online Fee          : " << doctor.onLineRates << "\n";
+    OffSet; cout << "Rating              : " << doctor.rating << "\n";
+    OffSet; cout << "Appointment Timing  : " << doctor.startingHour << " to " << doctor.endingHours << " PKT \n";
+    OffSet; cout << "Availability Days  :- \n";
+    for (int i = 0 ; i < doctor.availableDays.length() ; i += 1)
+    { OffSet;  cout << "-" << Time::fullDaysName[stoi(to_string(doctor.availableDays[i]))] << "\n"; }
+#undef OffSet
+
+    return os;
+}
 
 // File Write Format
 ofstream &operator<<(ofstream &outFile, const Doctor &doctor) {
@@ -184,13 +193,14 @@ ofstream &operator<<(ofstream &outFile, const Doctor &doctor) {
             << doctor.rates << reserveSeparator // 10
             << doctor.onLineRates << reserveSeparator // 11
             << doctor.rating << reserveSeparator // 12
-            << doctor.availableDays << "\n"; // 13
+            << doctor.availableDays << reserveSeparator// 13
+            << doctor.accountNumber <<"\n";  // 14
     return outFile;
 }
 
 // Loading Data
 Doctor *Doctor::StrToObj(string &str) {
-    string aux [14];
+    string aux [15];
 
     int idx = 0;
     for (int  i = 0 ; i < str.length() ; i += 1)
@@ -212,6 +222,7 @@ Doctor *Doctor::StrToObj(string &str) {
     doctor->onLineRates = stod(aux[11]);
     doctor->rating = stof(aux[12]);
     doctor->availableDays = aux[13];
+    doctor->accountNumber = aux[14];
 
     return doctor;
 }
@@ -223,11 +234,12 @@ void Doctor::Update() {
     cout << "  - Edit  specialization area        - 1\n";
     cout << "  - Edit location (city )            - 2\n";
     cout << "  - Edit hospital Name               - 3\n";
-    cout << "  - Edit appointment starting timing - 4\n";
+    cout << "  - Edit appointment timing          - 4\n";
     cout << "  - Edit in-person fee               - 5\n";
     cout << "  - Edit online fee                  - 6\n";
     cout << "  - Edit Availability Days           - 7\n";
-    cout << "  - Exit                             - 8\n";
+    cout << "  - Edit Account Number              - 8\n";
+    cout << "  - Exit                             - 9\n";
     int choice = GetInput<int>("Enter Choice : ");
     switch (choice) {
         case 1:
@@ -250,18 +262,14 @@ void Doctor::Update() {
             break;
         case 7:
             this->InputAvailableDays(true);
+        case 8:
+            this->accountNumber = GetAccountNumber ("Enter new Account number : " , 11);
         default:
             cout << " -- Never Mind \n";
     }
 }
 
-void Doctor::InputSpecializationArea() {
-    cout << "\n -- Select You're specialization area\n";
-    for (int i = 0; i < 4; i += 1) cout << "  - " << SpecializationList[i] << " - " << i << "\n";
-    int idx = GetInputInRange(0, 3, "Enter you're selection _  ", "Invalid Choice");
-    this->specializationArea = GetSpecializationByIdx(idx);
-    cout << "\n You Select _ " << specializationArea << "\n";
-}
+void Doctor::InputSpecializationArea() { this->specializationArea = GetSpecializationAreaInput();}
 
 void Doctor::InputAppointmentsTime() {
     this->startingHour = Clamp(GetValueUpper<int>(0, "Enter appointments starting Time WRT => 24 Hour format _  ",
@@ -289,9 +297,11 @@ void Doctor::InputAvailableDays(bool canEdit = false) {
         case 1:
             this->availableDays = "56";
             cout << " -- Added\n";
+            break;
         case 2:
             this->availableDays = "01234";
             cout << " -- Added\n";
+            break;
         case 3:
                 do
             {
@@ -324,9 +334,11 @@ void Doctor::InputAvailableDays(bool canEdit = false) {
                                     this->availableDays.push_back(to_string(choice)[0]);
                                     cout << " -- Added\n";
                                 }
+                                break;
                             case 2:
                                 RemoveChar(this->availableDays, to_string(choice)[0]);
                                 cout << " -- Removed\n";
+                                break;
                             default:
                                 cout << " -- Never Mind \n";
                         }
@@ -347,7 +359,31 @@ void Doctor::InputAvailableDays(bool canEdit = false) {
         default:
             cout << " -- Never Mind \n";
     }
-    cout << " -- All set\n";
+    cout << " -- All set :-) \n";
+}
+
+void Doctor::Display() {
+     cout << *this;
+    SetOffSet(2); cout << "Cnic     : " << this->cnicNumber << "\n";
+    SetOffSet(2); cout << "Password : " << this->password << "\n";
+    SetOffSet(2); cout << "Acc No   : " << this->accountNumber << "\n";
+    PrintChar('-' , 100);
+}
+
+string Doctor::GetSpecializationAreaInput() {
+    cout << "\n -- Select specialization area\n";
+    for (int i = 0; i < 4; i += 1) cout << "  - " << SpecializationList[i] << " - " << i << "\n";
+    int idx = GetInputInRange(0, 3, "Enter you're selection _  ", "Invalid Choice");
+    string specializationArea = GetSpecializationByIdx(idx);
+    cout << "\n You Select _ " << specializationArea << "\n";
+    return specializationArea;
+}
+
+bool Doctor::IsAvailableToday() {
+    Time timeNow;
+    for (int i = 0 ; i < this->availableDays.length() ; i += 1)
+        if (Time::daysName[stoi(to_string(this->availableDays[i]))] == timeNow.getDayName()) return true;
+    return false;
 }
 
 

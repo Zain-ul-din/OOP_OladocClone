@@ -10,7 +10,7 @@
 
 #define MAX 100000
 
-class Patients  : Users{
+class Patients  : public Users{
 public:
 
     Patients();
@@ -26,14 +26,18 @@ public:
 
     Patient** patients = NULL;
     int currentLoggedInPatientIdx;
+
+    /* Methods */
+
+    bool Search (Patient* patient); // returns => patient exists in record
+    int  Search (Patient& patient); // returns => Idx of patient in record
+
 private:
     static const string PATIENTS_FILEPATH;
     void Init ();
 
     bool SignUp_Helper (Patient** patient);  // returns => sign up succeed
-    bool IsContains (Patient& patient); // returns => doctor exists in record
     bool CheckPassword (Patient& patient); // password checker
-    int  GetIdxOf (Patient& patient); // returns => Idx of doctor in record
 };
 
 const string Patients::PATIENTS_FILEPATH = "PATIENTS_DATA.text";
@@ -48,7 +52,7 @@ void Patients::SignUp() {
     }
     idx += 1;
     this->patients[idx] = patient;
-    this->currentLoggedInPatientIdx = this->GetIdxOf(*patient);
+    this->currentLoggedInPatientIdx = this->Search(*patient);
     this->SaveData();
 }
 
@@ -56,7 +60,7 @@ void Patients::SignIn() {
        Patient* patient = new Patient();
        string email = GetString("Enter You're email _ ");
        patient->setEmail(email);
-       if (!IsContains(*patient))
+       if (!Search(&(*patient)))
      {
          PrintError("User don't exists please use sign up instead !");
          return;
@@ -75,7 +79,7 @@ void Patients::SignIn() {
          delete patient;
          return;
      }
-     this->currentLoggedInPatientIdx = GetIdxOf(*patient);
+     this->currentLoggedInPatientIdx = Search(*patient);
      delete patient;
 
 }
@@ -132,7 +136,7 @@ bool Patients::SignUp_Helper(Patient **patient) {
     (*patient)->setCnicNumber(cnic);
 
     // Duplicate Check
-    if (this->IsContains(**patient)) {
+    if (this->Search(&(**patient))) {
         PrintError("Account already exists please use signIn instead");
         return false;
     }
@@ -146,7 +150,7 @@ bool Patients::SignUp_Helper(Patient **patient) {
     {
         string email = GetString("Enter Email Address : ");
         (*patient)->setEmail(email);
-        isEmailAlreadyTaken = this->GetIdxOf(**patient) != -1;
+        isEmailAlreadyTaken = this->Search(**patient) != -1;
         if (isEmailAlreadyTaken)
             PrintError("OldaDoc account already exists on this email please use another email address");
 
@@ -155,6 +159,8 @@ bool Patients::SignUp_Helper(Patient **patient) {
 
     cout << "\n -- You're almost done with registration please provide some information about you :-) \n";
 
+    string name = GetString("Enter you're name : ");
+    (*patient)->setName(name);
     string contactNumber = GetContactNumber("Enter You're Contact Number : ");
     int age = GetInput<int>("Enter You're Age : ");
 
@@ -163,7 +169,7 @@ bool Patients::SignUp_Helper(Patient **patient) {
     (*patient)->setContactNumber(contactNumber);
     (*patient)->setAge(age);
 
-    cout << "\n -- Registration Succeed :-) ";
+    cout << "\n" << "\n -- Registration Succeed :-) ";
     cout << "\n -- Please use this userName and password to login";
     cout << "\n -- User Name : " << (*patient)->getEmail() ;
     cout << "\n -- Password  : " << (*patient)->getPassword() << "\n";
@@ -171,11 +177,6 @@ bool Patients::SignUp_Helper(Patient **patient) {
     return true;
 }
 
-bool Patients::IsContains(Patient &patient) {
-    for (int  i = 0 ; i < MAX && this->patients[i] != NULL ; i += 1)
-        if(*(this->patients[i]) == patient) return true;
-    return false;
-}
 
 bool Patients::CheckPassword(Patient &patient) {
     for (int  i = 0 ; i < MAX && this->patients[i] != NULL ; i += 1) {
@@ -186,7 +187,13 @@ bool Patients::CheckPassword(Patient &patient) {
     return false;
 }
 
-int Patients::GetIdxOf(Patient &patient) {
+bool Patients::Search(Patient *patient) {
+    for (int  i = 0 ; i < MAX && this->patients[i] != NULL ; i += 1)
+        if(*(this->patients[i]) == *patient) return true;
+    return false;
+}
+
+int Patients::Search(Patient &patient) {
     for (int  i = 0 ; i < MAX && this->patients[i] != NULL ; i += 1)
         if (*(this->patients[i]) == patient) return i;
     return -1;

@@ -16,7 +16,7 @@ public:
 
     Time();
     Time(int year, int month, int day, int hour, int min, const string &monthName, const string &dayName);
-
+    Time (string& time_str);
     /* Getter Setter */
 
     int getYear() const;
@@ -34,7 +34,7 @@ public:
     string getMonthName() const;
     void setMonthName(const string &monthName);
     void setTimeStr();
-
+    string getTimeStr() const;
     /* Helper */
     static Time ParseDate (string&);
 
@@ -43,14 +43,17 @@ public:
     bool operator==(const Time &rhs) const;
     bool operator!=(const Time &rhs) const;
 
-    friend ostream &operator<<(ostream &os, const Time &time);
+    friend ostream &operator  << (ostream &os, const Time &time);
     friend ofstream &operator << (ofstream& outFile , const Time& time);
 
-    static string daysName[7];
+    static string daysName[7]; // to make comparison with std c++ time
+    static string fullDaysName [7];
+
 private:
-      string timeStr;
-      int year , month , day , hour , min;
-      string monthName  , dayName;
+
+    string timeStr;
+    int year , month , day , hour , min;
+    string monthName  , dayName;
 
       void DateInit ();
       static const string  monthsName[12];
@@ -58,10 +61,12 @@ private:
 };
 
 string Time::daysName[7] = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+string Time::fullDaysName[7] = {"Monday" , "Tuesday" , "Thursday" , "Friday" , "Saturday" , "Sunday"};
 
 /* Constructor */
 
 Time::Time() { this->DateInit(); }
+Time::Time(string &time_str) { *this = ParseDate(time_str);}
 Time::Time(int year, int month, int day, int hour, int min, const string &monthName, const string &dayName) :
 year(year), month(month), day(day), hour(hour), min(min), monthName(monthName), dayName(dayName) {}
 
@@ -81,6 +86,7 @@ string Time::getDayName() const { return dayName;}
 void Time::setDayName(const string &dayName) { this->dayName = dayName; this->setTimeStr();}
 string Time::getMonthName() const { return monthName;}
 void Time::setMonthName(const string &monthName) { this->monthName = monthName; this->setTimeStr();}
+string Time::getTimeStr() const { return timeStr;}
 
 ostream &operator<<(ostream &os, const Time &time) {
     os << "timeStr: " << time.timeStr << " year: " << time.year << " month: " << time.month << " day: " << time.day
@@ -163,6 +169,8 @@ Time Time::ParseDate(string& timeStr) {
             auxiliaryArray[0]
     );
 }
+
+
 
 
 #endif //Time_H

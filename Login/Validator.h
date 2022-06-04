@@ -12,15 +12,13 @@ bool ValidatePassword(string &, const int);
 bool ValidateEmail(string &, string);
 bool ValidateCnic(string &);
 bool ValidateContactNumber (string&);
-
-
+bool ValidateAccountNumber (string& , const int);
 
 string GetPassword(const char *, bool);
 string GetEmail(const char *);
 string GetCnic(const char *);
 string GetContactNumber (const char*);
-
-
+string GetAccountNumber (const char* , int );
 
 /* Validates Password
    @ Params : std::string & pass , const int len
@@ -65,6 +63,7 @@ bool ValidatePassword(string &password, const int length) {
 
     return isValid;
 }
+
 
 /* Validates Emails
 @ Params : std::string & email , std::string match
@@ -135,10 +134,14 @@ bool ValidateContactNumber(string &contactNumber) {
     if (contactNumber.length() != 11) return false;
 
     const string NUMBER = "0987654321";
-    bool isValid = true;
-    for (int  i = 0  ; i < contactNumber.length() ; i += 1)
-        for (int idx = 0 ; idx < NUMBER.length() ; i += 1)
-            if (contactNumber[i] != NUMBER[i]) isValid = false;
+    bool isValid ;
+    for (int  i = 0  ; i < contactNumber.length() ; i += 1) {
+        isValid = false;
+        for (int idx = 0; idx < NUMBER.length(); idx += 1)
+            if (contactNumber[i] == NUMBER[idx]) isValid = true;
+        if (!isValid) break;
+    }
+
     return isValid;
 }
 
@@ -162,7 +165,7 @@ string GetPassword(const char *message, bool reCheck = true) {
 
         if (!reCheck) return password;
 
-        reTypePassword = GetString("Retype password : \n");
+        reTypePassword = GetString("Retype password : ");
         isMatch = password == reTypePassword;
         if (!isMatch) PrintError("2nd password is not matching with 1st one please retype again");
     }
@@ -187,7 +190,37 @@ string GetEmail(const char *message) {
     return email;
 }
 
+/* Validates Account Number
+   @ Params : std::string & pass , const int len
+   @ Returns : Boolean */
+bool ValidateAccountNumber(string &accountNumber ,const int len) {
+    if (accountNumber.length() != len) return false;
+    const string NUMBER = "1234567890";
+    bool isFound ;
+    for (int  i = 0 ; i < accountNumber.length() ; i += 1) {
+        isFound = false;
+        for (int idx = 0; idx < NUMBER.length(); idx += 1)
+            if (accountNumber[i] == NUMBER[idx]) isFound = true;
+        if (!isFound) return false;
+    }
+    return isFound;
+}
 
+/* Returns Valid Account Number
+   @ Params : const char* message , int length
+   @ Returns : string */
+string GetAccountNumber(const char * , int len) {
+    bool isValid ;
+    string accountNumber ;
+    do
+    {
+        accountNumber = GetString("Enter Account Number : ");
+        isValid = ValidateAccountNumber(accountNumber , len);
+        if (!isValid) PrintError("Invalid account Number ");
+    }
+    while (!isValid);
+    return accountNumber;
+}
 
 /* Returns Valid Password
    @ Params : const char* message

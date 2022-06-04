@@ -1,12 +1,11 @@
 //
-// Dependencies : SaveSystem.h
+// Dependencies : NONE
 //
 
 #ifndef USERS_H
 #define USERS_H
 
-#include "../Users/Doctor.h"
-#include "../Users/Patient.h"
+#include "../Users/Appointment.h"
 
 class Users;
 

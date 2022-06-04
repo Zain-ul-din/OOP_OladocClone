@@ -17,12 +17,13 @@ public:
     /* Constructor */
 
     User(const string &name, const string &cnicNumber, string password) : name(name),
-                                                                                          cnicNumber(cnicNumber),
-                                                                                          password(password) {}
+    cnicNumber(cnicNumber),
+    password(password) {}
+
     User() {
-        this->name = name;
-        this->cnicNumber = "";
-        this->password = "";
+        this->name = "undefined";
+        this->cnicNumber = "undefined";
+        this->password = "undefined";
     }
 
     /* Getter &  Setter's */
