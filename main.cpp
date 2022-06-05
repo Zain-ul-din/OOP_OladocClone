@@ -22,32 +22,10 @@ three users.
 
 #include "./OlaDoc.h"
 
-
-
 // Driver Code
 int main () {
-
-//
-//    std::string password = "Zainjl9i";
-////    std:: string password;
-////   std::cin>> password;
-//    if (ValidatePassword(password , 8)) std::cout << "True";
-//    else std::cout << "false";
-
-//    std::string email = "zain@gmail.com";
-//    if ( ValidateEmail(email , "@gmail.com") ){
-//        std::cout << "True";
-//    } else std::cout << "False";
-
-//    std::string cnic = "9032432940934";
-//    if (ValidateCnic(cnic)) {
-//        std::cout << "true";
-//    } else std::cout << "False";
-
     OlaDoc olaDoc;
-    OlaDoc_Manager manager;
-    manager.Show_DoctorPanel();
-
+    olaDoc.RunApplication();
     return 0;
 }
 

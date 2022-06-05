@@ -143,7 +143,7 @@ void Doctors::Init() {
 bool Doctors::SignUp_Helper(Doctor **doctor) {
 
     string email = GetEmail("Enter Email Address : ")
-    , cnicNumber= GetCnic("Enter Cnic Number : ");
+    , cnicNumber= GetCnic("Enter Cnic Number 13 digits : ");
     (*doctor)->setEmail(email);
     (*doctor)->setCnicNumber(cnicNumber);
 
@@ -177,7 +177,7 @@ bool Doctors::SignUp_Helper(Doctor **doctor) {
     string hospitalName  = GetString("Enter you're hospital name _ ")
     , city = GetString("Enter city name _ ");
     (*doctor)->InputAppointmentsTime();
-    string accountNumber = GetAccountNumber("Enter you're account Number : " , 11);
+    string accountNumber = GetAccountNumber("Enter you're account Number 11 digits : " , 11);
     (*doctor)->setAccountNumber(accountNumber);
     cout << " -- Revenue will be send after appointment \n";
     double rates  = abs(GetInput<double>("Enter in person appointment rate _ "))

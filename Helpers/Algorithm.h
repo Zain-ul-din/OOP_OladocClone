@@ -26,7 +26,7 @@ int CharToInt (char _char);
 // Swap two pointers
 template<class TYPE>
 void Swap (TYPE* ptr1 , TYPE* ptr2) {
-    TYPE** temp = ptr1;
+    TYPE* temp = ptr1;
     ptr1 = ptr2;
     ptr2 = temp;
 }

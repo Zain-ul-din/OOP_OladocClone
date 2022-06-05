@@ -161,7 +161,7 @@ string GetPassword(const char *message, bool reCheck = true) {
         {
             password = GetString(message);
             isValid = ValidatePassword(password, 8);
-            if (!isValid) PrintError("Invalid Password \n");
+            if (!isValid) PrintError("Invalid Password  ( Example : Qwerty47$ ) \n");
         }
             while (!isValid);
 
@@ -186,7 +186,7 @@ string GetEmail(const char *message) {
     {
         email = GetString(message);
         isValid = ValidateEmail(email, "@gmail.com");
-        if (!isValid) PrintError("Invalid email address please enter correct one ");
+        if (!isValid) PrintError("Invalid email address please enter correct one Example : abc123@gmail.com ");
     }
         while (!isValid);
     return email;
@@ -218,7 +218,10 @@ string GetAccountNumber(const char * , int len) {
     {
         accountNumber = GetString("Enter Account Number : ");
         isValid = ValidateAccountNumber(accountNumber , len);
-        if (!isValid) PrintError("Invalid account Number ");
+        if (!isValid) {
+            cout << "\n Account number must have " << len << " digits \n";
+            PrintError("Invalid account Number ");
+        }
     }
     while (!isValid);
     return accountNumber;
@@ -250,7 +253,8 @@ string GetContactNumber(const char * message) {
     {
         contactNumber = GetString(message);
         isValid = ValidateContactNumber(contactNumber);
-        if (!isValid) PrintError("Invalid Contact Number ! \n");
+        if (!isValid)
+            PrintError("Invalid Contact Number (number should be 11 digits) ! \n");
     }
         while (!isValid);
         return contactNumber;
@@ -265,9 +269,12 @@ Time GetTime (const char* message , const char* err) {
     do
     {
         cin >> inputTime;
-        if (timeNow > inputTime ) PrintError(err);
+        if (timeNow > inputTime ) {
+            cout << "\n" << timeNow << "\n";
+            PrintError(err);
+        }
     }
-    while (timeNow > inputTime );
+    while (timeNow > inputTime);
     return inputTime;
 }
 

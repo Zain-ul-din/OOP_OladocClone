@@ -34,8 +34,7 @@ public:
     void setCnicNumber(const string &cnicNumber) { this->cnicNumber = cnicNumber;}
     string getPassword() const { return password;}
     void setPassword(const string &password) { this->password = password;}
-    void setAdmin (bool state){this->isAdmin = state;}
-    bool IsAdmin () const {return this->isAdmin;}
+
 
     /* Virtual Functions */
 
@@ -44,7 +43,6 @@ protected:
     string name;
     string cnicNumber;
     string password;
-    bool isAdmin = false;
 };
 
 #endif //USER_H

@@ -179,7 +179,7 @@ Time Time::ParseDate(string& timeStr) {
 }
 
 
-bool Time::operator<(const Time &rhs) const {
+bool Time::operator < (const Time &rhs) const {
     if (rhs.month < this->month) return false;
     if (rhs.day < this->day && this->month == rhs.month) return false;
     if (rhs.hour < this->hour && this->day == rhs.day && this->month == rhs.month) return false;

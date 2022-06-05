@@ -110,7 +110,7 @@ Appointment::Appointment() {
     this->appointmentCost = 0;
     this->appointmentType = appointmentTypes[0];
     this->appointmentStatus = appointmentStatus[1];
-    this->isSeen = false;
+    this->isSeen = true;
     this->feedBack = "undefined";
     this->rating = 0;
     this->isDeleted = false;
@@ -128,10 +128,12 @@ void Appointment::Update(string options) {
            choice = GetInput<int>("Enter Choice : ");
            switch (choice) {
                case 0:
-                   this->appointmentStatus = Input("appointmentsStatus");
+                   this->appointmentStatus = Input("appointmentStatus");
+                   this->isSeen = false;
                    break;
                case 1:
-                   this->appointmentTime = GetTime(" >> Enter Time : ", "Time must be greater then time now !! ");
+                   this->appointmentTime = GetTime(" >> Enter Time :- ", "Time must be greater then time now !! ");
+                   this->isSeen = false;
                    break;
                case 2:
                    cout << " -- Exit \n";
@@ -157,7 +159,7 @@ void Appointment::Update(string options) {
           Time timeNow;
           switch (choice) {
               case 0:
-                  if (this->feedBack == "undefined") {
+                  if (this->feedBack != "undefined") {
                       PrintError("You Already sent a feedback");
                       break;
                   }
@@ -166,7 +168,7 @@ void Appointment::Update(string options) {
                   else cout << "\n You can send feedback after appointment \n";
                   break;
               case 1:
-                  if (this->feedBack == "undefined") {
+                  if (this->rating != 0) {
                       PrintError("You Already rated this doctor");
                       break;
                   }
@@ -180,18 +182,20 @@ void Appointment::Update(string options) {
                       cout << "\n -- " << refunds << " will be refund to you  -0% 0 day policy \n";
                   }
                   else if (timeNow.getDay() - applyTime.getDay() == 1) {
-                      refunds = GetPercentageOf(this->appointmentCost , 30);
-                      cout << "\n -- " << refunds << " will be refund to you -30%  1 day policy\n";
+                      refunds = GetPercentageOf(this->appointmentCost , 60);
+                      cout << "\n -- " << refunds << " will be refund to you 60%  1 day policy\n";
                   }
                   else if (timeNow.getDay() - applyTime.getDay() == 2) {
-                      refunds = GetPercentageOf(this->appointmentCost , 60);
-                      cout << "\n -- " << refunds << " will be refund to you -60% 2 days policy\n";
+                      refunds = GetPercentageOf(this->appointmentCost , 30);
+                      cout << "\n -- " << refunds << " will be refund to you 30% 2 days policy\n";
                   }
-                  else cout << "\n -- " << "no money will be refund to you 3 days has been passed - 100 _ 3 days policy \n";
-                  if (GetChoice("Do You want to cancel appointment Y/N : ")) {
+                  else cout << "\n -- " << " -- no money will be refund to you 3 days has been passed - 100 _ 3 days policy \n";
+                  if (GetChoice("\n >> Do You want to cancel appointment Y/N : ")) {
                       isDeleted = true;
+                      refunds = 0;
                       this->appointmentCost = refunds;
                       cout << "\n -- Appointment has been cancelled \n";
+                      choice = 3;
                   }
                   break;
               case 3:
@@ -263,14 +267,14 @@ Appointment *Appointment::MakeAppointment(Doctor &doctor, Patient &patient) {
      appointment->appointmentType = appointment->Input("appointmentType");
      appointment->appointmentCost = appointment->appointmentType == "in-person" ? doctor.getRates() : doctor.getOnLineRates();
 
-     Time timeNow , inputTime = GetTime(" >> Enter Time : " , "Time must be greater then time now !! ");
+     Time timeNow , inputTime = GetTime(" >> Enter Time :- " , "Time must be greater then time now !! ");
      cout << inputTime << "\n";
      if(GetChoice("\n -- Set time to now for testing __ OlaDoc Developers Y/N : "))
          appointment->appointmentTime = timeNow;
      else appointment->appointmentTime = inputTime;
      appointment->applyTime = timeNow;
      appointment->appointmentStatus = "pending";
-     cout << "\nYou're Appointment is pending wait for doctor reply \n";
+     cout << "\n-- You're Appointment is pending wait for doctor reply \n";
      return appointment;
 }
 
