@@ -7,6 +7,7 @@
 
 #include "../Helpers/Input.h"
 #include "../Helpers/Algorithm.h"
+#include "../Helpers/Time.h"
 
 bool ValidatePassword(string &, const int);
 bool ValidateEmail(string &, string);
@@ -19,6 +20,7 @@ string GetEmail(const char *);
 string GetCnic(const char *);
 string GetContactNumber (const char*);
 string GetAccountNumber (const char* , int );
+Time GetTime (const char* , const char*);
 
 /* Validates Password
    @ Params : std::string & pass , const int len
@@ -254,5 +256,19 @@ string GetContactNumber(const char * message) {
         return contactNumber;
 }
 
+/* Returns Valid time
+  @ Params : const char* message , const char* err
+  @ Returns : Time */
+Time GetTime (const char* message , const char* err) {
+    Time timeNow , inputTime;
+    cout << "\n" << message << "\n";
+    do
+    {
+        cin >> inputTime;
+        if (timeNow > inputTime ) PrintError(err);
+    }
+    while (timeNow > inputTime );
+    return inputTime;
+}
 
 #endif //VALIDATOR_H

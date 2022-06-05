@@ -18,7 +18,11 @@ bool IsContainsChar (string& , char);
 template<class  TYPE> bool IsInRange (TYPE , TYPE ,TYPE);
 void RemoveChar (string& , char);
 
+double GetPercentageOf (double val , float percent);
+float GetPercentageOf (float val , float percent);
+
 int CharToInt (char _char);
+
 
 // Returns=> Char to int
 int CharToInt(char _char) { return int(_char) - 48;}
@@ -59,6 +63,17 @@ void RemoveChar (string& str , char _char) {
     str = "";
     for (int  i = 0 ; i < aux.length() ; i += 1 )
         if (aux[i] != _char) str.push_back(aux[i]);
+}
+
+// @ Returns Percentage
+double GetPercentageOf(double val, float percent) { return (val / 100) * percent;}
+float GetPercentageOf(float val, float percent) { return (val / 100) * percent;}
+
+// @ Returns Char in String
+bool IsContainsChar(string &str, char _char) {
+    for (int i = 0 ; i < str.length() ; i += 1)
+        if (str[i] == _char) return true;
+    return false;
 }
 
 #endif //ALGORITHM_H

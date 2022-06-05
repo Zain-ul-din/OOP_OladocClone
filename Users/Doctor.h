@@ -170,7 +170,7 @@ ostream &operator << (ostream &os, const Doctor &doctor) {
     OffSet; cout << "Appointment Timing  : " << doctor.startingHour << " to " << doctor.endingHours << " PKT \n";
     OffSet; cout << "Availability Days  :- \n";
     for (int i = 0 ; i < doctor.availableDays.length() ; i += 1)
-    { OffSet;  cout << "-" << Time::fullDaysName[CharToInt(doctor.availableDays[i])] << "\n"; }
+    { OffSet;  cout << " - " << Time::fullDaysName[CharToInt(doctor.availableDays[i])] << "\n"; }
 #undef OffSet
 
     return os;

@@ -29,6 +29,9 @@ private:
       // Helpers
       void ShowDoctorAppointments ();
       void ShowPatientAppointments ();
+
+      void ShowAppointmentsDetails_Doctor ();
+      void ShowAppointmentsDetails_Patient ();
 };
 
 void OlaDoc_Manager::Show_DoctorPanel() {
@@ -55,7 +58,7 @@ void OlaDoc_Manager::Show_DoctorPanel() {
 void OlaDoc_Manager::Show_PatientPanel() {
         cout << "\n -- Patient Panel \n";
         cout << "  - Login with existing account     - 0\n";
-        cout << "  - Sign Up ( new to OldaDoc )      - 1\n";
+        cout << "  - Sign Up ( new to OlaDoc )       - 1\n";
         int choice = GetInput<int>("Enter Choice _ ");
         switch (choice)
     {
@@ -79,7 +82,11 @@ void OlaDoc_Manager::DoctorMenu () {
           for (; choice != 3 ;)
     {
           system("cls");
-          cout << "\n -- Welcome to OldaDoc \n";
+          int newAppointmentCount = this->appointments.Search(*(this->doctors.doctors[this->doctors.currentLoggedInDoctorIdx]));
+          cout << "\n -- Welcome to OlaDoc \n";
+          if (newAppointmentCount > 0)
+            cout << " -- Hoo you have " << newAppointmentCount << " new appointments please check them out :-) \n";
+          else cout << "\n";
           cout << "\n  - View Profile       - 0 \n";
           cout << "\n  - Edit Profile       - 1 \n";
           cout << "\n  - Check Appointments - 2 \n";
@@ -113,7 +120,7 @@ void OlaDoc_Manager::PatientMenu() {
     for ( ; choice != 4 ;)
     {
         system("cls");
-        cout << "\n -- Welcome to OldaDoc \n";
+        cout << "\n -- Welcome to OlaDoc \n";
         cout << "\n  - View Profile        - 0 \n";
         cout << "\n  - Edit Profile        - 1 \n";
         cout << "\n  - Search Doctors      - 2 \n";
@@ -152,7 +159,7 @@ void OlaDoc_Manager::SearchDoctors_Menu() {
     {
         system("cls"); //Patient can search for doctors by (Specialty, Area, and Hospitals)
 
-        cout << "\n -- Welcome to OldaDoc Search Menu . Here you can find best doctors in less time  \n";
+        cout << "\n -- Welcome to OlaDoc Search Menu . Here you can find best doctors in less time  \n";
         cout << "\n  - Search doctor by Specialty - 0 \n" ;
         cout << "\n  - Search doctor by Area      - 1 \n" ;
         cout << "\n  - Search doctor by Hospital  - 2 \n" ;
@@ -242,16 +249,17 @@ void OlaDoc_Manager::SearchDoctors_Menu() {
 }
 
 void OlaDoc_Manager::Appointments_Menu() {
-    if (!GetChoice("Do You want to make Appointment with any of these doctors Y/N : ")) return;
-    int idx = GetInput<int>("Enter Serial No of doctor for more details : ");
+    if (!GetChoice("\n >> Do You want to make Appointment with any of these doctors Y/N : ")) return;
+    int idx = GetInput<int>(" >> Enter Serial No of doctor for more details : ");
     if (!this->doctors.Search(idx)) {
         PrintError("Invalid Serial Number !! ");
         return;
     }
     system("cls");
     cout << *(this->doctors.doctors[idx]) ;
+    this->appointments.Print(*(this->doctors.doctors[idx]) , 5);
     PrintChar('-' , 100);
-    if (!GetChoice("Do you want to make appointment with this doctor Y/N : ")) return;
+    if (!GetChoice(" >> Do you want to make appointment with this doctor Y/N : ")) return;
     this->appointments.MakeAppointment(*(this->doctors.doctors[idx] ), *(this->patients.patients[this->patients.currentLoggedInPatientIdx]));
 }
 
@@ -268,8 +276,10 @@ void OlaDoc_Manager::ShowDoctorAppointments() {
         appointments.Print(idx
              , *(patients.Search(appointments.appointments[idx]->getPatientCnic() ) )
              , *(this->appointments.appointments[idx]));
+        appointments.appointments[idx]->setIsSeen(true);
         isFound = true;
     }
+    this->appointments.SaveData();
     if (!isFound) cout << " \n -- No Appointment So far \n";
 }
 
@@ -291,4 +301,24 @@ void OlaDoc_Manager::ShowPatientAppointments() {
     if (!isFound) cout << " \n -- Empty \n";
 }
 
+void OlaDoc_Manager::ShowAppointmentsDetails_Doctor() {
+    if (!GetChoice(" >> Do you see any appointment details ")) return;
+    int idx = GetInput<int>("Enter idx of serial no of appointment for more details : ");
+    if (this->appointments.Search(idx) == NULL) {
+        PrintError("Invalid Serial Number ");
+        return;
+    }
+    system("cls");
+    cout << this->patients.Search(this->appointments.appointments[idx]->getPatientCnic());
+    PrintChar('-' , 100);
+    if (!GetChoice(" >> Do you want to edit appointment detail Y/N : ")) return;
+    this->appointments.appointments[idx]->Update("Doctor");
+    this->appointments.SaveData();
+}
+
+void OlaDoc_Manager::ShowAppointmentsDetails_Patient() {
+
+}
+
+//
 #endif //OLDA_DOC_MANAGER_H

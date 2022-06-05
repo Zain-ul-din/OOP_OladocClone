@@ -16,6 +16,7 @@ public:
 
     Time();
     Time(int year, int month, int day, int hour, int min, const string &monthName, const string &dayName);
+    Time (int year , int month , int day , int hour , int min);
     Time (string& time_str);
     /* Getter Setter */
 
@@ -48,7 +49,7 @@ public:
     bool operator>=(const Time &rhs) const;
 
     friend ostream &operator<<(ostream &os, const Time &time) {
-        os << "\n Time PKT M/D/Y : " <<  time.month << " / " << time.day << " / " << time.year << " " << time.hour << ":" << time.min << ":" << "00\n" ;
+        os << "Time PKT M/D/Y : " <<  time.month << " / " << time.day << " / " << time.year << " " << time.hour << ":" << time.min << ":" << "00" ;
         return os;
     }
 
@@ -58,7 +59,7 @@ public:
     }
 
     friend istream & operator >> (istream& in , Time& time){
-        time.month = GetInputInRange(1 , 12 , " Enter Month : " , "Invalid Month !");
+        time.month = GetInputInRange(1 , 12 , "Enter Month : " , "Invalid Month !");
         time.day = GetInputInRange(1 , time.month % 2 == 0 ? 30 : 31 , "Enter Date : " , "Invalid Date !");
         time.hour = GetInputInRange(1 , 24 , "Enter Hour w.r.t 24 : " , "Invalid Hour");
         time.min = GetInputInRange(1 , 60 , "Enter Min : " , "Invalid Min");
@@ -89,6 +90,7 @@ Time::Time() { this->DateInit(); }
 Time::Time(string &time_str) { *this = ParseDate(time_str);}
 Time::Time(int year, int month, int day, int hour, int min, const string &monthName, const string &dayName) :
 year(year), month(month), day(day), hour(hour), min(min), monthName(monthName), dayName(dayName) {}
+Time::Time(int year, int month, int day, int hour, int min) : year(year) , month(month) , day(day) , hour(hour) , min (min) {}
 
 /* Getter Setter */
 
@@ -178,20 +180,18 @@ Time Time::ParseDate(string& timeStr) {
 
 
 bool Time::operator<(const Time &rhs) const {
-    if (year < rhs.year) return true;
-    if (rhs.year < year) return false;
-    if (month < rhs.month) return true;
-    if (rhs.month < month) return false;
-    if (day < rhs.day) return true;
-    if (rhs.day < day) return false;
-    if (hour < rhs.hour) return true;
-    if (rhs.hour < hour) return false;
-    return min < rhs.min;
+    if (rhs.month < this->month) return false;
+    if (rhs.day < this->day && this->month == rhs.month) return false;
+    if (rhs.hour < this->hour && this->day == rhs.day && this->month == rhs.month) return false;
+    if (rhs.min < this->min && rhs.hour == this->hour && this->day == rhs.day && this->month == rhs.month) return false;
+    return true;
 }
 
 bool Time::operator>(const Time &rhs) const { return rhs < *this;}
 bool Time::operator<=(const Time &rhs) const { return !(rhs < *this);}
 bool Time::operator>=(const Time &rhs) const { return !(*this < rhs);}
+
+
 
 
 #endif //Time_H

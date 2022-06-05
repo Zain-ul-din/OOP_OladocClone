@@ -22,8 +22,11 @@ three users.
 
 #include "./OlaDoc.h"
 
+
+
 // Driver Code
 int main () {
+
 //
 //    std::string password = "Zainjl9i";
 ////    std:: string password;
@@ -41,7 +44,7 @@ int main () {
 //        std::cout << "true";
 //    } else std::cout << "False";
 
-   // OlaDoc olaDoc;
+    OlaDoc olaDoc;
     OlaDoc_Manager manager;
     manager.Show_DoctorPanel();
 
