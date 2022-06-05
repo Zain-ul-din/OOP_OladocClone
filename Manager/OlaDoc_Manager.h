@@ -281,6 +281,7 @@ void OlaDoc_Manager::ShowDoctorAppointments() {
     }
     this->appointments.SaveData();
     if (!isFound) cout << " \n -- No Appointment So far \n";
+    else this->ShowAppointmentsDetails_Doctor();
 }
 
 void OlaDoc_Manager::ShowPatientAppointments() {
@@ -299,11 +300,12 @@ void OlaDoc_Manager::ShowPatientAppointments() {
         isFound = true;
     }
     if (!isFound) cout << " \n -- Empty \n";
+    else this->ShowAppointmentsDetails_Patient();
 }
 
 void OlaDoc_Manager::ShowAppointmentsDetails_Doctor() {
     if (!GetChoice(" >> Do you see any appointment details ")) return;
-    int idx = GetInput<int>("Enter idx of serial no of appointment for more details : ");
+    int idx = GetInput<int>("Enter serial no of appointment for more details : ");
     if (this->appointments.Search(idx) == NULL) {
         PrintError("Invalid Serial Number ");
         return;
@@ -311,14 +313,25 @@ void OlaDoc_Manager::ShowAppointmentsDetails_Doctor() {
     system("cls");
     cout << this->patients.Search(this->appointments.appointments[idx]->getPatientCnic());
     PrintChar('-' , 100);
-    if (!GetChoice(" >> Do you want to edit appointment detail Y/N : ")) return;
+    if (!GetChoice("\n >> Do you want to edit appointment detail Y/N : ")) return;
     this->appointments.appointments[idx]->Update("Doctor");
     this->appointments.SaveData();
 }
 
 void OlaDoc_Manager::ShowAppointmentsDetails_Patient() {
-
+    int idx = GetInput<int>("Enter serial no of appointment for more details : ");
+    if (this->appointments.Search(idx) == NULL) {
+        PrintError("Invalid Serial Number ");
+        return;
+    }
+    system("cls");
+    cout << this->doctors.Search(this->appointments.appointments[idx]->getDoctorCnic() , 0);
+    this->appointments.Print(*(this->doctors.doctors[idx]) , 5);
+    PrintChar('-' , 100);
+    if (!GetChoice("\n >> Do you want to edit appointment detail Y/N : ")) return;
+    this->appointments.appointments[idx]->Update("Patient");
+    this->appointments.Delete(*(this->patients.patients[this->patients.currentLoggedInPatientIdx]));
 }
 
-//
+
 #endif //OLDA_DOC_MANAGER_H

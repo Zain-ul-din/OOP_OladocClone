@@ -200,6 +200,8 @@ void Appointment::Update(string options) {
               default:
                   PrintError("Invalid Choice !!");
           }
+          system("pause");
+          system("cls");
       }
    }
 }

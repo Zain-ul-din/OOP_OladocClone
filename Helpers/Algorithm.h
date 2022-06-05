@@ -23,6 +23,13 @@ float GetPercentageOf (float val , float percent);
 
 int CharToInt (char _char);
 
+// Swap two pointers
+template<class TYPE>
+void Swap (TYPE* ptr1 , TYPE* ptr2) {
+    TYPE** temp = ptr1;
+    ptr1 = ptr2;
+    ptr2 = temp;
+}
 
 // Returns=> Char to int
 int CharToInt(char _char) { return int(_char) - 48;}

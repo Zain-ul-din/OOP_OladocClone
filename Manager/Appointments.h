@@ -28,6 +28,10 @@ public:
     void Print (int idx , Patient& patient , Appointment& appointment);
     void Print (string user);
     void Print (Doctor& doctor , int max); // feedbacks
+
+    void Delete (Patient& patient);
+    void Delete (int index);
+
     int idx ;
 private:
     static string APPOINTMENTS_FILEPATH ;
@@ -159,6 +163,29 @@ void Appointments::Print(Doctor &doctor , int max) {
     if (!isFound)
         cout << "\n -- No feedback so far !! \n";
     cout << "\n";
+}
+
+void Appointments::Delete(Patient& patient) {
+     for (int i = 0 ; i < MAX && this->appointments[i] != NULL ; i += 1)
+         if (this->appointments[i]->IsDeleted()) {
+             double refunds = this->appointments[i]->getAppointmentCost();
+             patient.setBalance(patient.getBalance() + this->appointments[i]->getAppointmentCost());
+             cout << "\n -- " << refunds << " RS has been refund to you're account \n";
+             cout << "\n -- Current Balance : " << patient.getBalance() << "\n";
+             Delete(i);
+         }
+     this->SaveData();
+}
+
+void Appointments::Delete(int index) {
+    if (this->appointments[index + 1] == NULL ){
+        this->idx -= 1;
+        delete this->appointments[index];
+        this->appointments[index] = NULL;
+        return;
+    }
+    Swap(this->appointments[index] , this->appointments[index + 1]);
+    Delete(index + 1);
 }
 
 
