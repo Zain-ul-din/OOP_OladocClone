@@ -67,13 +67,13 @@ ofstream & operator << (ofstream& outFile , Appointment& appointment) {
     outFile << appointment.doctorCnic << reserveSeparator
     << appointment.patientCnic << reserveSeparator
     << appointment.appointmentCost << reserveSeparator
-    << Replace(appointment.appointmentTime.getTimeStr()) << reserveSeparator
+    << appointment.appointmentTime << reserveSeparator
     << appointment.appointmentType << reserveSeparator
     << appointment.appointmentStatus << reserveSeparator
     << appointment.isSeen << reserveSeparator
     << Replace(appointment.feedBack) << reserveSeparator
     << appointment.rating << reserveSeparator
-    << Replace(appointment.applyTime.getTimeStr())<< "\n";
+    << appointment.applyTime << "\n";
     return outFile;
 }
 
@@ -101,7 +101,7 @@ Appointment *Appointment::StrToObj(string& str) {
     return appointment;
 }
 
-string Appointment::appointmentsStatus[3] = { "approved" , "pending" "reject" };
+string Appointment::appointmentsStatus[3] = { "approved" , "pending" , "reject" };
 string Appointment::appointmentTypes [2]  = {"in-person" , "online"};
 
 Appointment::Appointment() {
@@ -118,6 +118,7 @@ Appointment::Appointment() {
 
 // Doctor | Patient
 void Appointment::Update(string options) {
+
    if (options == "Doctor") {
        int choice = 0;
        for ( ; choice != 2; ) {

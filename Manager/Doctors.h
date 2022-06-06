@@ -19,12 +19,15 @@ public:
 
     void SignUp() override;
     void SignIn() override;
-    void Delete(string options = "") override;
-    void Update(string options = "") override;
+
+    void Update(int idx) override;
+    void Update (Doctor& doctor , int idx);
     void LoadData() override;
     void SaveData() override;
 
     /* Methods */
+
+    void Delete (int idx) ;
 
     int Search (Doctor& doctor) const; // returns => Idx of doctor in record
     int Search (string& doctorName) const; // returns => idx of element where name == doctorName
@@ -34,6 +37,8 @@ public:
     bool Search (string& specialty , string& area , string& hospital , bool matchAll = true) const; // ..
     bool Search (int idx) const; // Search By idx
     Doctor* Search (string cnicNumber , int flag) ; // Search by Cnic Number
+    bool Search (string email , string options);
+    void Search ();
 
     int currentLoggedInDoctorIdx;
     Doctor** doctors = NULL;
@@ -124,9 +129,6 @@ void Doctors::SaveData() {
     out.close();
 }
 
-void Doctors::Delete(string options ) {
-
-}
 
 
 
@@ -207,8 +209,6 @@ bool Doctors::CheckPassword(Doctor &doctor) {
 
     return false;
 }
-
-void Doctors::Update(string options) {}
 
 /* Search Functionality */
 // string specialty, string hospital, string area
@@ -324,6 +324,11 @@ Doctor *Doctors::Search(string cnicNumber , int flag) {
     return NULL;
 }
 
+bool Doctors::Search(string email, string options) {
+    for (int i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1)
+        if (this->doctors[i]->getEmail() == email) return true;
+    return false;
+}
 
 void Doctors::DisplayRow(int idx, Doctor& doctor) {
     SetOffSet(idx, 9 , '|' );
@@ -347,5 +352,100 @@ void Doctors::DisplayRow() {
     SetOffSet("Available Today" , 12 , ' ');
     cout << "\n";
 }
+
+void Doctors::Delete(int idx ) {
+     if (this->doctors[idx+1] == NULL) {
+         delete this->doctors[idx] ;
+         this->doctors[idx] = NULL;
+         idx -= 1;
+         return;
+     }
+    Swap(this->doctors[idx] , this->doctors[idx+1]);
+    Delete(idx + 1 );
+}
+
+void Doctors::Search() {
+    this->DisplayRow();
+     for (int  i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1)
+         this->DisplayRow(i , *(this->doctors[i]));
+}
+
+void Doctors::Update(int idx) {
+     cout << "\n - Update Profile                  - 0 \n";
+     cout << "\n - Update Account confidential's   - 1 \n";
+     cout << "\n - Exit                            - 3 \n";
+     int choice = GetInput<int>("Enter Choice : ");
+    switch (choice) {
+        case 0:
+            this->doctors[idx]->Update(); this->SaveData();
+            break;
+        case 1:
+            this->Update(*(this->doctors[idx]) , idx);
+            break;
+        case 2:
+            cout << "\n -- Exit \n";
+            break;
+        default:
+            PrintError("Invalid Choice !!");
+    }
+
+}
+
+void Doctors::Update(Doctor &doctor , int idx) {
+    int choice;
+    for ( ; choice != 4;) {
+        cout << "\n - Change User Name   - 0\n";
+        cout << "\n - Change Password    - 1\n";
+        cout << "\n - Change Email       - 2\n";
+        cout << "\n - Change Cnic Number - 3\n";
+        cout << "\n - Exit               - 4\n";
+        choice = GetInput<int>("Enter Choice : ");
+        string prevState;
+        string currentState;
+        bool isAlreadyTaken;
+        switch (choice) {
+            case 0:
+                doctor.setPassword(GetPassword("Enter new password : "));
+                break;
+            case 1:
+                currentState = GetString("Enter new Name : ");
+                isAlreadyTaken = this->Search(currentState) != -1;
+                if (isAlreadyTaken)
+                    PrintError("Name Already Taken !!");
+                else doctor.setName(currentState);
+                cout << "\n Name : " << doctor.getName() << "\n";
+                break;
+            case 2:
+                prevState = doctor.getEmail();
+                doctor.setEmail("NULL");
+                currentState = GetEmail("Enter new Email  : ");
+                isAlreadyTaken = this->Search(currentState, "NONE");
+                if (isAlreadyTaken) {
+                    PrintError("Email already taken !!!");
+                    doctor.setEmail(prevState);
+                } else doctor.setEmail(currentState);
+                cout << "\n Email : " << doctor.getEmail() << "\n";
+                break;
+            case 3:
+                prevState = doctor.getCnicNumber();
+                doctor.setCnicNumber("0");
+                currentState = GetCnic("Enter new Cnic Number : ");
+                isAlreadyTaken = this->Search(currentState, 0);
+                if (isAlreadyTaken) {
+                    PrintError("Cnic Already Taken !!");
+                    doctor.setCnicNumber(prevState);
+                } else doctor.setCnicNumber(currentState);
+                cout << " Cnic : " << doctor.getCnicNumber() << "\n";
+                break;
+            case 4:
+                cout << "\n -- Exit \n";
+            default:
+                PrintError("Invalid Choice !!");
+        }
+        this->SaveData();
+    }
+}
+
+
 
 #endif //DOCTORS_H

@@ -167,7 +167,7 @@ Time Time::ParseDate(string& timeStr) {
             else auxiliaryArray1[idx].push_back(auxStr[i]);
     }
 
-    return Time(
+    Time time(
             stoi(auxiliaryArray[4]) ,
             GetIdxOfMonth(auxiliaryArray[1]),
             stoi(auxiliaryArray[2]) ,
@@ -176,6 +176,8 @@ Time Time::ParseDate(string& timeStr) {
             auxiliaryArray[1] ,
             auxiliaryArray[0]
     );
+    time.setTimeStr();
+    return time;
 }
 
 

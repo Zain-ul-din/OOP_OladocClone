@@ -270,7 +270,7 @@ Time GetTime (const char* message , const char* err) {
     {
         cin >> inputTime;
         if (timeNow > inputTime ) {
-            cout << "\n" << timeNow << "\n";
+            cout << "\n Time Now : " << timeNow << "\n";
             PrintError(err);
         }
     }

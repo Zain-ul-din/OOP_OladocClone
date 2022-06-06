@@ -33,6 +33,7 @@ public:
 
     void Delete (Patient& patient);
     void Delete (int index);
+    void Delete (Doctor& doctor);
 
     int idx ;
 private:
@@ -85,13 +86,13 @@ void Appointments::MakeAppointment(Doctor &doctor, Patient& patient) {
      cout << "    - 2 days policy : 30% money return \n";
      cout << "    - 3 days policy : 0% money return \n";
 
-    if (!GetChoice(" I Agree with Polices : Y/N : ")) return;
+    if (!GetChoice("\n    >> I Agree with Polices : Y/N : ")) return;
 
      Appointment appointment;
      Appointment * appointmentObj = appointment.MakeAppointment(doctor , patient);
      Time _time = appointmentObj->getAppointmentTime();
      if (Search(doctor , patient , _time)){
-         PrintError("You can't have two appointments at a same time with same doctor ! ");
+         PrintError("You can't have two appointments at a same time with same doctor !! ");
          delete appointmentObj;
          return;
      }
@@ -101,7 +102,7 @@ void Appointments::MakeAppointment(Doctor &doctor, Patient& patient) {
      if (appointmentFee > patient.getBalance()) {
          while (appointmentFee > patient.getBalance()) {
              PrintError("Insufficient funds ");
-             if (GetChoice("Do You wana to Recharge You're Account : ")) {
+             if (GetChoice("Do You wanna to Recharge You're Account : ")) {
                  patient.setBalance(patient.getBalance() + Payment::ReChargeAccount());
              } else{
                  cout << "Appointment Canceled \n";
@@ -198,7 +199,6 @@ int Appointments::Search(Patient &patient) {
     return count;
 }
 
-
 void Appointments::Print(Doctor &doctor , int max) {
     cout << " \n\t -- Other Patients FeedBack About this Doctor :- \n";
     int maxCount = max;
@@ -239,6 +239,10 @@ void Appointments::Delete(int index) {
     Delete(index + 1);
 }
 
-
+void Appointments::Delete(Doctor &doctor) {
+     for (int i = 0 ; i < MAX && this->appointments[i] != NULL ; i += 1)
+         if (this->appointments[i]->getDoctorCnic() == doctor.getCnicNumber())
+             this->Delete(i);
+}
 
 #endif //APPOINTMENTS_H

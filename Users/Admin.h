@@ -69,6 +69,7 @@ bool Admin::Login() {
                 this->password = GetPassword("Enter Password : ");
                 this->canSignIn = true;
                 this->SaveData();
+                return true;
                 break;
             case 1:
                 cout << "\n -- Exit \n";
@@ -77,6 +78,7 @@ bool Admin::Login() {
                 PrintError("Invalid Choice ");
         }
     }
+    return false;
 }
 
 void Admin::SaveData() {
@@ -86,7 +88,7 @@ void Admin::SaveData() {
         out.close();
         return;
     }
-    out << Replace(this->userName) << this->password << "\n";
+    out << Replace(this->userName)  << reserveSeparator << this->password << "\n";
     out.close();
 }
 
@@ -95,7 +97,7 @@ void Admin::LoadData() {
     in.open (this->ADMINFILE_PATH , ios::in);
     if (in.fail() || IsEmptyFile(in)) {
         in.close();
-        this->LoadData();
+        this->SaveData();
         return;
     }
     string aux , auxArray[2];

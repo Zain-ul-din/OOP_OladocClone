@@ -19,8 +19,8 @@ public:
 
     void SignUp() override;
     void SignIn() override;
-    void Delete(string options) override;
-    void Update(string options) override;
+
+    void Update(int idx) override;
     void LoadData() override;
     void SaveData() override;
 
@@ -29,6 +29,7 @@ public:
 
     /* Methods */
 
+    void Delete (int idx ) ;
     bool Search (Patient* patient); // returns => patient exists in record
     int  Search (Patient& patient); // returns => Idx of patient in record
     Patient* Search (string cnicNumber);
@@ -84,11 +85,7 @@ void Patients::SignIn() {
 
 }
 
-void Patients::Delete(string options) {
-
-}
-
-void Patients::Update(string options) {
+void Patients::Update(int idx) {
 
 }
 
@@ -203,6 +200,17 @@ Patient *Patients::Search(string cnicNumber) {
     for (int i = 0 ; i < MAX && this->patients[i] != NULL ; i += 1)
         if (this->patients[i]->getCnicNumber() == cnicNumber) return this->patients[i];
     return nullptr;
+}
+
+void Patients::Delete(int idx ) {
+    if (this->patients[idx+1] == NULL) {
+        delete this->patients[idx];
+        this->patients[idx] = NULL;
+        idx -= 1;
+        return;
+    }
+    Swap(this->patients[idx] , this->patients[idx+1]);
+    Delete(idx + 1 );
 }
 
 #endif //PAIDPROJECT_PATIENTS_H

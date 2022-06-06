@@ -12,9 +12,11 @@ CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Manager\OlaDoc_Manager.h
 CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Manager\Patients.h
 CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Manager\Users.h
 CMakeFiles\PaidProject.dir\main.cpp.obj: ..\OlaDoc.h
+CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Users\Admin.h
 CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Users\Appointment.h
 CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Users\Doctor.h
 CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Users\Patient.h
+CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Users\Payment.h
 CMakeFiles\PaidProject.dir\main.cpp.obj: ..\Users\User.h
 CMakeFiles\PaidProject.dir\main.cpp.obj: ..\main.cpp
 

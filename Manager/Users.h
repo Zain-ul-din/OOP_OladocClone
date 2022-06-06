@@ -17,8 +17,7 @@ public:
     virtual void SignUp () = 0;
     virtual void SignIn () = 0;
 
-    virtual void Delete(string options = "") = 0;
-    virtual void Update(string options = "") = 0;
+    virtual void Update(int idx) = 0;
 
     virtual void LoadData () = 0;
     virtual void SaveData () = 0;
