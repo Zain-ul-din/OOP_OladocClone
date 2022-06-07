@@ -32,7 +32,9 @@ public:
     void Delete (int idx ) ;
     bool Search (Patient* patient); // returns => patient exists in record
     int  Search (Patient& patient); // returns => Idx of patient in record
+    void Search ();
     Patient* Search (string cnicNumber);
+    bool Search (int idx);
 private:
     static const string PATIENTS_FILEPATH;
     void Init ();
@@ -81,8 +83,7 @@ void Patients::SignIn() {
          return;
      }
      this->currentLoggedInPatientIdx = Search(*patient);
-     delete patient;
-
+    // delete patient;
 }
 
 void Patients::Update(int idx) {
@@ -131,9 +132,8 @@ bool Patients::SignUp_Helper(Patient **patient) {
 
     string cnic = GetCnic("Enter 13 digit Cnic Number : ");
     (*patient)->setCnicNumber(cnic);
-
     // Duplicate Check
-    if (this->Search(&(**patient))) {
+    if (this->Search(cnic )) {
         PrintError("Account already exists please use signIn instead");
         return false;
     }
@@ -153,6 +153,8 @@ bool Patients::SignUp_Helper(Patient **patient) {
 
     }
         while (isEmailAlreadyTaken);
+
+
 
     cout << "\n -- You're almost done with registration please provide some information about you :-) \n";
 
@@ -211,6 +213,17 @@ void Patients::Delete(int idx ) {
     }
     Swap(this->patients[idx] , this->patients[idx+1]);
     Delete(idx + 1 );
+}
+
+void Patients::Search() {
+     for (int i = 0 ; i < MAX && this->patients[i] != NULL ; i +=1)
+         this->patients[i]->Display();
+}
+
+bool Patients::Search(int idx) {
+    for (int  i =0 ; i  < MAX  && this->patients[i] != NULL ; i += 1 )
+        if (i == idx) return true;
+    return false;
 }
 
 #endif //PAIDPROJECT_PATIENTS_H

@@ -39,7 +39,7 @@ public:
     void setApplyTime(const Time &applyTime);
     bool IsDeleted ();
     string Input (const string options);
-    void Update (string options);
+    void Update (string options , string user);
 
     friend ofstream & operator << (ofstream&, Appointment&);
 
@@ -67,13 +67,13 @@ ofstream & operator << (ofstream& outFile , Appointment& appointment) {
     outFile << appointment.doctorCnic << reserveSeparator
     << appointment.patientCnic << reserveSeparator
     << appointment.appointmentCost << reserveSeparator
-    << appointment.appointmentTime << reserveSeparator
+    << Replace(appointment.appointmentTime.getTimeStr())<< reserveSeparator
     << appointment.appointmentType << reserveSeparator
     << appointment.appointmentStatus << reserveSeparator
     << appointment.isSeen << reserveSeparator
     << Replace(appointment.feedBack) << reserveSeparator
     << appointment.rating << reserveSeparator
-    << appointment.applyTime << "\n";
+    << Replace(appointment.applyTime.getTimeStr()) << "\n";
     return outFile;
 }
 
@@ -117,7 +117,7 @@ Appointment::Appointment() {
 }
 
 // Doctor | Patient
-void Appointment::Update(string options) {
+void Appointment::Update(string options , string user= "Patient") {
 
    if (options == "Doctor") {
        int choice = 0;
@@ -160,35 +160,49 @@ void Appointment::Update(string options) {
           Time timeNow;
           switch (choice) {
               case 0:
-                  if (this->feedBack != "undefined") {
-                      PrintError("You Already sent a feedback");
-                      break;
+                      if (user == "Admin")
+                  {
+                      this->feedBack = GetString("Enter new FeedBack : ");
                   }
-                  if (timeNow > this->appointmentTime)
-                      this->feedBack = GetString("Enter FeedBack : ");
-                  else cout << "\n You can send feedback after appointment \n";
+                      else
+                  {
+                      if (this->feedBack != "undefined") {
+                          PrintError("You Already sent a feedback");
+                          break;
+                      }
+                      if (timeNow > this->appointmentTime && this->appointmentStatus != "pending")
+                          this->feedBack = GetString("Enter FeedBack : ");
+                      else cout << "\n You can send feedback after appointment | appointment is still in pending\n";
+                  }
                   break;
               case 1:
-                  if (this->rating != 0) {
-                      PrintError("You Already rated this doctor");
-                      break;
-                  }
-                  if (timeNow > this->appointmentTime)
+                      if (user == "Admin")
+                  {
                       this->rating = GetInputInRange(1 , 5 , "Rate (1-5) : " , "Invalid input !");
-                  else cout << "\n You can rate after appointment \n";
+                  }
+                      else
+                  {
+                      if (this->rating != 0) {
+                          PrintError("You Already rated this doctor");
+                          break;
+                      }
+                      if (timeNow > this->appointmentTime && this->appointmentStatus != "pending")
+                          this->rating = GetInputInRange(1, 5, "Rate (1-5) : ", "Invalid input !");
+                      else cout << "\n You can rate after appointment | appointment is still in pending \n";
+                  }
                   break;
               case 2:
                   if (timeNow.getDay() - applyTime.getDay() == 0 ) {
                       refunds = this->appointmentCost;
-                      cout << "\n -- " << refunds << " will be refund to you  -0% 0 day policy \n";
+                      cout << "\n -- " << refunds << " will be refund to you > -0% 0 day policy \n";
                   }
                   else if (timeNow.getDay() - applyTime.getDay() == 1) {
                       refunds = GetPercentageOf(this->appointmentCost , 60);
-                      cout << "\n -- " << refunds << " will be refund to you 60%  1 day policy\n";
+                      cout << "\n -- " << refunds << " will be refund to you > 60%  1 day policy\n";
                   }
                   else if (timeNow.getDay() - applyTime.getDay() == 2) {
                       refunds = GetPercentageOf(this->appointmentCost , 30);
-                      cout << "\n -- " << refunds << " will be refund to you 30% 2 days policy\n";
+                      cout << "\n -- " << refunds << " will be refund to you > 30% 2 days policy\n";
                   }
                   else cout << "\n -- " << " -- no money will be refund to you 3 days has been passed - 100 _ 3 days policy \n";
                   if (GetChoice("\n >> Do You want to cancel appointment Y/N : ")) {

@@ -33,9 +33,14 @@ void PrintError (const char* message) { cout << "\n Error : " << message << " \n
 string GetString (const char* message) {
     cout << "\n >> "<< message;
     string str;
-    cin.clear(); // ! clear previous buffer
-    cin.sync(); // reset flags
-    getline(cin , str);
+    do
+    {
+        cin.clear(); // ! clear previous buffer
+        cin.sync(); //  reset flags
+        getline(cin, str);
+        if (str.empty()) cout << "\n >> "<< message;
+    }
+    while (str.empty());
     return str;
 }
 

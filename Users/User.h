@@ -45,4 +45,5 @@ protected:
     string password;
 };
 
+
 #endif //USER_H

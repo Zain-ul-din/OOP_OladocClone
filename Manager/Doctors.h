@@ -37,7 +37,7 @@ public:
     bool Search (string& specialty , string& area , string& hospital , bool matchAll = true) const; // ..
     bool Search (int idx) const; // Search By idx
     Doctor* Search (string cnicNumber , int flag) ; // Search by Cnic Number
-    bool Search (string email , string options);
+    bool Search (string email , string options , int flag);
     void Search ();
 
     int currentLoggedInDoctorIdx;
@@ -65,8 +65,8 @@ void Doctors::SignUp() {
          return;
      }
      this->idx += 1;
-     this->currentLoggedInDoctorIdx = this->Search(*doctor);
      this->doctors[idx] = doctor;
+     this->currentLoggedInDoctorIdx = this->Search(*doctor);
      this->SaveData();
 }
 
@@ -324,7 +324,7 @@ Doctor *Doctors::Search(string cnicNumber , int flag) {
     return NULL;
 }
 
-bool Doctors::Search(string email, string options) {
+bool Doctors::Search(string email, string options , int flag) {
     for (int i = 0 ; i < MAX && this->doctors[i] != NULL ; i += 1)
         if (this->doctors[i]->getEmail() == email) return true;
     return false;
@@ -392,7 +392,7 @@ void Doctors::Update(int idx) {
 }
 
 void Doctors::Update(Doctor &doctor , int idx) {
-    int choice;
+    int choice =0 ;
     for ( ; choice != 4;) {
         cout << "\n - Change User Name   - 0\n";
         cout << "\n - Change Password    - 1\n";
@@ -419,7 +419,7 @@ void Doctors::Update(Doctor &doctor , int idx) {
                 prevState = doctor.getEmail();
                 doctor.setEmail("NULL");
                 currentState = GetEmail("Enter new Email  : ");
-                isAlreadyTaken = this->Search(currentState, "NONE");
+                isAlreadyTaken = this->Search(currentState, "NONE" ,0);
                 if (isAlreadyTaken) {
                     PrintError("Email already taken !!!");
                     doctor.setEmail(prevState);

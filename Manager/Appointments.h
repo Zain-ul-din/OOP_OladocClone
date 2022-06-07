@@ -34,6 +34,9 @@ public:
     void Delete (Patient& patient);
     void Delete (int index);
     void Delete (Doctor& doctor);
+    void Delete (Patient& patient , int flag);
+
+    void CalculateRating (Doctor& doctor);
 
     int idx ;
 private:
@@ -200,19 +203,23 @@ int Appointments::Search(Patient &patient) {
 }
 
 void Appointments::Print(Doctor &doctor , int max) {
-    cout << " \n\t -- Other Patients FeedBack About this Doctor :- \n";
+    cout << " \n\t\t -- Other Patients FeedBack About this Doctor :- \n";
     int maxCount = max;
     bool isFound = false;
     int i = this->idx + 1;
-    while (i--)
-        if (this->appointments[i]->getDoctorCnic() == doctor.getCnicNumber() && this->appointments[i]->getFeedBack() != "undefined") {
+
+    while (i--) {
+        if (this->appointments[i] == NULL) break;
+        if (this->appointments[i]->getDoctorCnic() == doctor.getCnicNumber() &&
+            this->appointments[i]->getFeedBack() != "undefined") {
             if (maxCount == 0) return;
             maxCount -= 1;
-            cout << "\n\t \"\" " << this->appointments[i]->getFeedBack() << " \"\" \n";
+            cout << "\n\t\t\t  \"\" " << this->appointments[i]->getFeedBack() << " \"\" \n";
             isFound = true;
         }
+    }
     if (!isFound)
-        cout << "\n\t !! No feedback so far !! \n";
+        cout << "\n\t\t !! No feedback so far !! \n";
     cout << "\n";
 }
 
@@ -243,6 +250,25 @@ void Appointments::Delete(Doctor &doctor) {
      for (int i = 0 ; i < MAX && this->appointments[i] != NULL ; i += 1)
          if (this->appointments[i]->getDoctorCnic() == doctor.getCnicNumber())
              this->Delete(i);
+}
+
+void Appointments::Delete(Patient &patient, int flag) {
+    for (int i = 0 ; i < MAX && this->appointments[i] != NULL ; i += 1)
+        if (this->appointments[i]->getPatientCnic() == patient.getCnicNumber())
+            this->Delete(i);
+}
+
+void Appointments::CalculateRating(Doctor &doctor) {
+    float rating = 0;
+    int count = 0;
+
+     for (int i = 0 ; i < MAX && this->appointments[i] != NULL ; i += 1)
+         if (doctor.getCnicNumber() == this->appointments[i]->getDoctorCnic()) {
+             rating += this->appointments[i]->getRating();
+             count += 1;
+         }
+     double  finalRating = rating / count;
+     doctor.setRating(finalRating);
 }
 
 #endif //APPOINTMENTS_H

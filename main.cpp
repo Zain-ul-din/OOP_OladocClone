@@ -1,14 +1,3 @@
-/*
- * Following are the main Module of Oladoc
-1. Appointment Management Module
-2. Doctor Schedule Management Module
-3. Patient Management Module
-4. Doctor Management Module
-5. Login Module
-6. Registration Module
-This system has three users. Admin, Doctor, and Patient. So all feature has been divided between these
-three users.
- */
 
 /*
  * Project Title : Oladoc HealthCare Clone
@@ -16,10 +5,7 @@ three users.
  * Dependencies : NONE
  */
 
-#include "./Login/Validator.h"
-#include "./Users/User.h"
-#include "./Users/Doctor.h"
-
+#define _CRT_SECURE_NO_WARNINGS
 #include "./OlaDoc.h"
 
 // Driver Code
@@ -28,15 +14,3 @@ int main () {
     olaDoc.RunApplication();
     return 0;
 }
-
-// 2046
-
-/*
- * File System
- * => admin, doctor, and patient.
- */
-
-/*
- * Panel  : Doctor Panel
- *
- */

@@ -71,7 +71,7 @@ void Patient::setContactNumber(const string &contactNumber) { this->contactNumbe
 string Patient::getEmail() const { return email; }
 void Patient::setEmail(const string &email) { this->email = email;}
 
-bool Patient::operator==(const Patient &rhs) const { return this->cnicNumber == cnicNumber || email == rhs.email; }
+bool Patient::operator==(const Patient &rhs) const { return this->cnicNumber == rhs.cnicNumber || this->email == rhs.email; }
 bool Patient::operator!=(const Patient &rhs) const { return !(rhs == *this);}
 
 /* Over Rides */

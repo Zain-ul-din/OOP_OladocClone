@@ -45,6 +45,11 @@ private:
       void Patient_UD(); // Update Delete
 };
 
+OlaDoc_Manager::OlaDoc_Manager() {
+    cout << " \n Add Intro Here \n";
+}
+
+
 void OlaDoc_Manager::Show_DoctorPanel() {
        system("cls");
        cout << "\n -- Doctor Panel \n";
@@ -94,6 +99,8 @@ void OlaDoc_Manager::Show_PatientPanel() {
 }
 
 void OlaDoc_Manager::DoctorMenu () {
+     appointments.CalculateRating(*(this->doctors.doctors[this->doctors.currentLoggedInDoctorIdx]));
+     doctors.SaveData();
           int choice = 0;
           for (; choice != 4 ;)
     {
@@ -213,21 +220,21 @@ void OlaDoc_Manager::SearchDoctors_Menu(string options= "Patient") {
                 match = Doctor::GetSpecializationAreaInput();
                 isFound = this->doctors.Search(match , "Specialty");
                 if (!isFound) cout << "\t\t -- Not Found \n";
-                else if (options == "Admin") cout << "admin";
+                else if (options == "Admin") this->Doctor_UD();
                 else Appointments_Menu();
             break;
             case 1:
                 match = GetString("Enter doctor Area (city name) : ");
                 isFound = this->doctors.Search(match , "Area");
                 if (!isFound) cout << "\t\t -- Not Found \n";
-                else if (options == "Admin") cout << "admin";
+                else if (options == "Admin") this->Doctor_UD();
                 else Appointments_Menu();
             break;
             case 2:
                 match = GetString("Enter Hospital Name : ");
                 isFound = this->doctors.Search(match , "Hospital");
                 if (!isFound) cout << "\t\t -- Not Found \n";
-                else if (options == "Admin") cout << "admin";
+                else if (options == "Admin") this->Doctor_UD();
                 else Appointments_Menu();
             break;
             case 3:
@@ -272,7 +279,7 @@ void OlaDoc_Manager::SearchDoctors_Menu(string options= "Patient") {
                             PrintError("Invalid Choice");
                     }
                     if (!isFound) cout << "\t\t -- Not Found \n";
-                    else if (options == "Admin") cout << "admin";
+                    else if (options == "Admin") this->Doctor_UD();
                     else Appointments_Menu();
                     system("pause");
                 }
@@ -284,9 +291,7 @@ void OlaDoc_Manager::SearchDoctors_Menu(string options= "Patient") {
             default:
                 PrintError("Invalid Choice ! ");
         }
-        if (!isFound) cout << "\t\t -- Not Found \n";
-        else if (options == "Admin") cout << "admin";
-        else Appointments_Menu();
+
         system("pause");
     }
 }
@@ -366,7 +371,7 @@ void OlaDoc_Manager::ShowPatientAppointments( Patient & patient, string options)
 }
 
 void OlaDoc_Manager::ShowAppointmentsDetails_Doctor(Doctor& doctor) {
-    if (!GetChoice("\n >> Do you see any appointment details Y/N ")) return;
+    if (!GetChoice("\n >> Do you see any appointment details Y/N : ")) return;
     int idx = GetInput<int>("Enter serial no of appointment for more details : ");
     if (this->appointments.Search(idx) == NULL || this->appointments.Search(idx)->getDoctorCnic() != doctor.getCnicNumber()) {
         PrintError("Invalid Serial Number ");
@@ -382,7 +387,7 @@ void OlaDoc_Manager::ShowAppointmentsDetails_Doctor(Doctor& doctor) {
 }
 
 void OlaDoc_Manager::ShowAppointmentsDetails_Patient(Patient& patient) {
-    if (!GetChoice("\n >> Do you see any appointment details Y/N ")) return;
+    if (!GetChoice("\n >> Do you see any appointment details Y/N : ")) return;
     int idx = GetInput<int>("Enter serial no of appointment for more details : ");
     if (this->appointments.Search(idx) == NULL || this->appointments.Search(idx)->getPatientCnic() != patient.getCnicNumber()) {
         PrintError("Invalid Serial Number ");
@@ -391,11 +396,12 @@ void OlaDoc_Manager::ShowAppointmentsDetails_Patient(Patient& patient) {
     system("cls");
     // Valid Idx => Show Doctor
     cout << "\n" << *(this->doctors.Search(this->appointments.appointments[idx]->getDoctorCnic() , 0));
-    this->appointments.Print(*(this->doctors.doctors[idx]) , 5);
+    this->appointments.Print( *(this->doctors.Search(this->appointments.appointments[idx]->getDoctorCnic() , 4)) , 5);
     PrintChar('-' , 100);
     if (!GetChoice("\n >> Do you want to edit appointment detail Y/N : ")) return;
     this->appointments.appointments[idx]->Update("Patient");
     this->appointments.Delete(*(this->patients.patients[this->patients.currentLoggedInPatientIdx]));
+    appointments.CalculateRating(*(this->doctors.Search(this->appointments.appointments[idx]->getDoctorCnic() , 4)));
     this->patients.SaveData();
 }
 
@@ -416,8 +422,10 @@ void OlaDoc_Manager::Show_AdminPanel() {
             switch (choice)
         {
             case 0:
+                this->DoctorEditMenu();
                 break;
             case 1:
+                this->PatientMenu();
                 break;
             case 2:
                 cout << "\n -- Exit \n";
@@ -429,9 +437,6 @@ void OlaDoc_Manager::Show_AdminPanel() {
    }
 }
 
-OlaDoc_Manager::OlaDoc_Manager() {
-    cout << " \n Add Intro Here \n";
-}
 
 void OlaDoc_Manager::DoctorEditMenu() {
     system("cls");
@@ -444,6 +449,7 @@ void OlaDoc_Manager::DoctorEditMenu() {
      {
          case 0:
              doctors.Search();
+             this->Doctor_UD();
              break;
          case 1:
              this->SearchDoctors_Menu("Admin");
@@ -464,7 +470,20 @@ void OlaDoc_Manager::PatientEditMenu() {
     cout << "\n  - Search Patients     - 1\n";
     cout << "\n  - Exit                - 2\n";
     int choice = GetInput<int>("Enter Choice : ");
-    
+    switch (choice) {
+        case 0:
+              this->patients.Search();
+              this->Patient_UD();
+            break;
+        case 1:
+             cout << "\n You will find Search option in version 2.0 wait for update ! \n";
+            break;
+        case 2:
+            cout << "\n -- Exit \n";
+            break;
+        default:
+            PrintError("Invalid Choice!!");
+    }
 }
 
 void OlaDoc_Manager::Doctor_UD() {
@@ -484,11 +503,15 @@ void OlaDoc_Manager::Doctor_UD() {
     switch (choice) {
         case 0:
             this->ShowDoctorAppointments(*(this->doctors.doctors[idx]) , "Admin");
+            this->appointments.SaveData();
+            this->doctors.SaveData();
             break;
         case 1:
             if (GetChoice(" >> Are you sure to Delete this Account (Note : All appointments will also deleted ! ) Y/N : ")) {
                 this->doctors.Delete(idx);
                 this->appointments.Delete(*(this->doctors.doctors[idx]));
+                this->appointments.SaveData();
+                this->doctors.SaveData();
             }
             break;
         case 2:
@@ -508,7 +531,7 @@ void OlaDoc_Manager::Appointment_UD() {
     }
     cout << "\n - Edit - 0 \n";
     cout << "\n - Exit - 1 \n";
-    int _choice;
+    int _choice = 0;
     int choice = GetInput<int>("Enter Choice : ");
     switch (choice) {
         case 0:
@@ -521,10 +544,10 @@ void OlaDoc_Manager::Appointment_UD() {
                 _choice = GetInput<int>("Enter Choice : ");
                 switch (_choice) {
                     case 0:
-                        this->appointments.appointments[idx]->Update("Doctor");
+                        this->appointments.appointments[idx]->Update("Doctor" , "Admin");
                         break;
                     case 1:
-                        this->appointments.appointments[idx]->Update("Patient");
+                        this->appointments.appointments[idx]->Update("Patient" , "Admin");
                         break;
                     case 2:
                         cout << "\n -- Exit \n";
@@ -544,7 +567,39 @@ void OlaDoc_Manager::Appointment_UD() {
 }
 
 void OlaDoc_Manager::Patient_UD() {
+    if (!GetChoice(" >> Do You wanna to Edit any Patient Details Y/N : ")) return;
+    int idx = GetInput<int>("Enter Serial Number of Patient you wanna to edit : ");
+    if (this->patients.Search(idx)) {
+        PrintError("Invalid Serial Number !!");
+        return;
+    }
 
+    this->patients.patients[idx]->Display();
+    cout << "\n -- Select Operation \n";
+    cout << "\n  - Show All Appointments of this Doctor - 0 \n";
+    cout << "\n  - Delete Account                       - 1 \n";
+    cout << "\n  - Update Data                          - 2 \n";
+    cout << "\n  - Exit                                 - 3 \n";
+    int choice = GetInput<int>("Enter Choice : ");
+    switch (choice) {
+        case 0:
+            this->ShowPatientAppointments(*(this->patients.patients[idx]) , "Admin");
+        break;
+        case 1:
+            if (GetChoice(" >> Are you sure to Delete this Account (Note : All appointments will also deleted ! ) Y/N : ")) {
+                this->patients.Delete(idx);
+                this->appointments.Delete(*(this->patients.patients[idx]) , 0);
+                this->appointments.SaveData();
+                this->doctors.SaveData();
+            }
+        break;
+        case 2:
+            this->patients.patients[idx]->Update();
+            this->patients.SaveData();
+            break;
+        default:
+            PrintError("Invalid Choice !!");
+    }
 }
 
 
